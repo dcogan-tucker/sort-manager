@@ -17,20 +17,28 @@ public class Starter
 		bubbleSorter.sortArray(arrayToSort);
 		Printer.printMessage("Array after sort: " + Arrays.toString(arrayToSort) + "\n");
 
-		Printer.printMessage("------MERGE SORT------");
-		MergeSorter mergeSorter = new MergeSorter();
+		try
+		{
+			int[] emptyArray = {};
+			Printer.printMessage("Array before sort: " + Arrays.toString(emptyArray));
+			// empty array should throw IllegalArgumentException.
+			bubbleSorter.sortArray(emptyArray);
+		}
+		catch (IllegalArgumentException e)
+		{
+			Printer.printMessage(e.getMessage());
+		}
 
-		int[] arrayToSortTwo = {5, 7, 9, 1, -10, 5, 0, 0};
-		Printer.printMessage("Array before sort: " + Arrays.toString(arrayToSortTwo));
-		mergeSorter.sortArray(arrayToSortTwo);
-		Printer.printMessage("Array after sort: " + Arrays.toString(arrayToSortTwo) + "\n");
-
-		Printer.printMessage("------QUICK SORT------");
-		QuickSorter quickSorter = new QuickSorter();
-
-		int[] arrayToSortThree = {3, 67, 9, -12, -243, 5, 0, 1};
-		Printer.printMessage("Array before sort: " + Arrays.toString(arrayToSortThree));
-		quickSorter.sortArray(arrayToSortThree);
-		Printer.printMessage("Array after sort: " + Arrays.toString(arrayToSortThree) + "\n");
+		try
+		{
+			int[] nullArray = null;
+			Printer.printMessage("Array before sort: " + Arrays.toString(nullArray));
+			// null array should throw a NullPointerException.
+			bubbleSorter.sortArray(nullArray);
+		}
+		catch (NullPointerException e)
+		{
+			Printer.printMessage(e.getMessage());
+		}
 	}
 }
