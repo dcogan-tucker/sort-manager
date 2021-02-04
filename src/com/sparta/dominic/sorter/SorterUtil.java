@@ -12,11 +12,11 @@ public class SorterUtil
 	{
 		if (arrayToSort == null)
 		{
-			throw new NullPointerException("Cannot sort as array is null!");
+			throw new NullPointerException("Cannot sort as array is null!\n");
 		}
 		else if (arrayToSort.length == 0)
 		{
-			throw new IllegalArgumentException("Cannot sort as array is empty!");
+			throw new IllegalArgumentException("Cannot sort as array is empty!\n");
 		}
 	}
 
