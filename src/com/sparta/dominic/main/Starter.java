@@ -13,14 +13,17 @@ public class Starter
 		BubbleSorter bubbleSorter = new BubbleSorter();
 
 		int[] arrayToSort = {1, 4, 6, -3, 9, 0, 55, 2, -100};
-		Printer.printMessage("Array before sort: " + Arrays.toString(arrayToSort));
+		Printer.printFormattedMessage("Array before sort: %s",
+				Arrays.toString(arrayToSort));
 		bubbleSorter.sortArray(arrayToSort);
-		Printer.printMessage("Array after sort: " + Arrays.toString(arrayToSort) + "\n");
+		Printer.printFormattedMessage("Array after sort: %s\n",
+				Arrays.toString(arrayToSort));
 
 		try
 		{
 			int[] emptyArray = {};
-			Printer.printMessage("Array before sort: " + Arrays.toString(emptyArray));
+			Printer.printFormattedMessage("Array before sort: %s",
+					Arrays.toString(emptyArray));
 			// empty array should throw IllegalArgumentException.
 			bubbleSorter.sortArray(emptyArray);
 		}
@@ -32,7 +35,8 @@ public class Starter
 		try
 		{
 			int[] nullArray = null;
-			Printer.printMessage("Array before sort: " + Arrays.toString(nullArray));
+			Printer.printFormattedMessage("Array before sort: %s",
+					Arrays.toString(nullArray));
 			// null array should throw a NullPointerException.
 			bubbleSorter.sortArray(nullArray);
 		}
