@@ -1,20 +1,23 @@
 package com.sparta.dominic.sorter;
 
+import com.sparta.dominic.exception.EmptyArrayException;
+import com.sparta.dominic.exception.NullArrayException;
+
 public class SorterUtil
 {
 	/*
 	 * Checks if the array to be sorted is null or if it is empty and throws a
 	 * corresponding exception.
 	 */
-	protected static void nullAndEmptyArrayChecker(int[] arrayToSort)
+	protected static void nullAndEmptyArrayChecker(int[] arrayToSort) throws EmptyArrayException, NullArrayException
 	{
 		if (arrayToSort == null)
 		{
-			throw new IllegalArgumentException("Cannot sort as array is null!\n");
+			throw new NullArrayException("Cannot sort as array is null!\n");
 		}
 		else if (arrayToSort.length == 0)
 		{
-			throw new IllegalArgumentException("Cannot sort as array is empty!\n");
+			throw new EmptyArrayException("Cannot sort as array is empty!\n");
 		}
 	}
 

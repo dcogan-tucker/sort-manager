@@ -1,5 +1,9 @@
 package com.sparta.dominic.sorter;
 
+import com.sparta.dominic.exception.EmptyArrayException;
+import com.sparta.dominic.exception.NullArrayException;
+import com.sparta.dominic.util.Printer;
+
 public class MergeSorter implements Sorter
 {
 
@@ -11,8 +15,15 @@ public class MergeSorter implements Sorter
 	@Override
 	public int[] sortArray(int[] arrayToSort)
 	{
-		SorterUtil.nullAndEmptyArrayChecker(arrayToSort);
-		return sortAuxiliary(arrayToSort, 0, arrayToSort.length - 1);
+		try
+		{
+			SorterUtil.nullAndEmptyArrayChecker(arrayToSort);
+			sortAuxiliary(arrayToSort, 0, arrayToSort.length - 1);
+		} catch (EmptyArrayException | NullArrayException e)
+		{
+			Printer.printMessage(e.getMessage());
+		}
+		return arrayToSort;
 	}
 
 	/*

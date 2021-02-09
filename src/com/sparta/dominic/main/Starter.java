@@ -19,31 +19,17 @@ public class Starter
 		Printer.printFormattedMessage("Array after sort: %s\n",
 				Arrays.toString(arrayToSort));
 
-		try
-		{
-			int[] emptyArray = {};
-			Printer.printFormattedMessage("Array before sort: %s",
-					Arrays.toString(emptyArray));
-			// empty array should throw IllegalArgumentException and be caught.
-			bubbleSorter.sortArray(emptyArray);
-		}
-		catch (IllegalArgumentException e)
-		{
-			Printer.printMessage(e.getMessage());
-		}
+		int[] emptyArray = {};
+		Printer.printFormattedMessage("Array before sort: %s",
+				Arrays.toString(emptyArray));
+		// empty array should throw IllegalArgumentException and be caught.
+		bubbleSorter.sortArray(emptyArray);
 
-		try
-		{
-			int[] nullArray = null;
-			Printer.printFormattedMessage("Array before sort: %s",
-					Arrays.toString(nullArray));
-			// null array should throw IllegalArgumentException and be caught.
-			bubbleSorter.sortArray(nullArray);
-		}
-		catch (IllegalArgumentException e)
-		{
-			Printer.printMessage(e.getMessage());
-		}
+		int[] nullArray = null;
+		Printer.printFormattedMessage("Array before sort: %s",
+				Arrays.toString(nullArray));
+		// null array should throw IllegalArgumentException and be caught.
+		bubbleSorter.sortArray(nullArray);
 
 		Printer.printMessage("------MERGE SORT------");
 		MergeSorter mergeSorter = new MergeSorter();
@@ -55,30 +41,15 @@ public class Starter
 		Printer.printFormattedMessage("Array after sort: %s\n",
 				Arrays.toString(arrayToSort2));
 
-		try
-		{
-			int[] emptyArray = {};
-			Printer.printFormattedMessage("Array before sort: %s",
-					Arrays.toString(emptyArray));
-			// empty array should throw IllegalArgumentException and be caught.
-			mergeSorter.sortArray(emptyArray);
-		}
-		catch (IllegalArgumentException e)
-		{
-			Printer.printMessage(e.getMessage());
-		}
 
-		try
-		{
-			int[] nullArray = null;
-			Printer.printFormattedMessage("Array before sort: %s",
-					Arrays.toString(nullArray));
-			// null array should throw IllegalArgumentException and be caught.
-			mergeSorter.sortArray(nullArray);
-		}
-		catch (IllegalArgumentException e)
-		{
-			Printer.printMessage(e.getMessage());
-		}
+		Printer.printFormattedMessage("Array before sort: %s",
+				Arrays.toString(emptyArray));
+		// empty array should throw IllegalArgumentException and be caught.
+		mergeSorter.sortArray(emptyArray);
+
+		Printer.printFormattedMessage("Array before sort: %s",
+				Arrays.toString(nullArray));
+		// null array should throw IllegalArgumentException and be caught.
+		mergeSorter.sortArray(nullArray);
 	}
 }
