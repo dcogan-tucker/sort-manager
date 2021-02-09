@@ -10,7 +10,7 @@ public class SorterUtil
 	{
 		if (arrayToSort == null)
 		{
-			throw new NullPointerException("Cannot sort as array is null!\n");
+			throw new IllegalArgumentException("Cannot sort as array is null!\n");
 		}
 		else if (arrayToSort.length == 0)
 		{
@@ -26,5 +26,25 @@ public class SorterUtil
 		int temp = arrayToSort[firstIndex];
 		arrayToSort[firstIndex] = arrayToSort[secondIndex];
 		arrayToSort[secondIndex] = temp;
+	}
+
+	/*
+	 * Copy the source array from the source start index to the destination array starting from the
+	 * destination index, copying until there are no more elements in the source, or the destination
+	 * array has been filled.
+	 */
+	protected static void copyArray(int[] srcArray, int srcIndex, int[] destArray, int destIndex)
+	{
+		System.arraycopy(srcArray, srcIndex, destArray, destIndex, destArray.length - destIndex);
+	}
+
+	/*
+	 * Copy the source array from the source start index to the destination array starting from the
+	 * destination index, copying until there are no more elements in the source, or the number of
+	 * elements copied is equal to the given length.
+	 */
+	protected static void copyArray(int[] srcArray, int srcIndex, int[] destArray, int destIndex, int length)
+	{
+		System.arraycopy(srcArray, srcIndex, destArray, destIndex, length);
 	}
 }
