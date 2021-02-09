@@ -15,9 +15,9 @@ public class Starter
 		int[] arrayToSort = {1, 4, 6, -3, 9, 0, 55, 2, -100};
 		Printer.printFormattedMessage("Array before sort: %s",
 				Arrays.toString(arrayToSort));
-		bubbleSorter.sortArray(arrayToSort);
+		int[] sortedArray = bubbleSorter.sortArray(arrayToSort);
 		Printer.printFormattedMessage("Array after sort: %s\n",
-				Arrays.toString(arrayToSort));
+				Arrays.toString(sortedArray));
 
 		int[] emptyArray = {};
 		Printer.printFormattedMessage("Array before sort: %s",
@@ -37,9 +37,9 @@ public class Starter
 		int[] arrayToSort2 = {1, 7, 10, 15, 11, 4, 1, 0, -22};
 		Printer.printFormattedMessage("Array before sort: %s",
 				Arrays.toString(arrayToSort2));
-		mergeSorter.sortArray(arrayToSort2);
+		int[] sortedArray2 = mergeSorter.sortArray(arrayToSort2);
 		Printer.printFormattedMessage("Array after sort: %s\n",
-				Arrays.toString(arrayToSort2));
+				Arrays.toString(sortedArray2));
 
 
 		Printer.printFormattedMessage("Array before sort: %s",
