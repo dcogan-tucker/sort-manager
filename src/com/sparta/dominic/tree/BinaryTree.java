@@ -1,4 +1,4 @@
-package com.sparta.dominic.sorter;
+package com.sparta.dominic.tree;
 
 import com.sparta.dominic.exception.ChildNotFoundException;
 

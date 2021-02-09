@@ -1,6 +1,7 @@
-package com.sparta.dominic.sorter;
+package com.sparta.dominic.tree;
 
 import com.sparta.dominic.exception.ChildNotFoundException;
+import com.sparta.dominic.tree.BinaryTree;
 
 public class BinarySearchTree implements BinaryTree
 {
