@@ -2,7 +2,8 @@ package com.sparta.dominic.sorter;
 
 import com.sparta.dominic.exception.EmptyArrayException;
 import com.sparta.dominic.exception.NullArrayException;
-import com.sparta.dominic.printer.Printer;
+import com.sparta.dominic.util.ArrayUtil;
+import com.sparta.dominic.util.Printer;
 
 public class MergeSorter implements Sorter
 {
@@ -17,7 +18,7 @@ public class MergeSorter implements Sorter
 	{
 		try
 		{
-			SorterUtil.nullAndEmptyArrayChecker(arrayToSort);
+			ArrayUtil.nullAndEmptyArrayChecker(arrayToSort);
 			sortAuxiliary(arrayToSort, 0, arrayToSort.length - 1);
 		} catch (EmptyArrayException | NullArrayException e)
 		{
@@ -57,54 +58,12 @@ public class MergeSorter implements Sorter
 		int[] rightArray = new int[endIndex - midPoint];
 
 		// Copy the subarrays to temp arrays.
-		SorterUtil.copyArray(arrayToSort, startIndex, leftArray, 0);
-		SorterUtil.copyArray(arrayToSort, (midPoint + 1), rightArray, 0);
+		ArrayUtil.copyArray(arrayToSort, startIndex, leftArray, 0);
+		ArrayUtil.copyArray(arrayToSort, (midPoint + 1), rightArray, 0);
 
 		// merge the temp arrays.
-		int[] merged = merge(leftArray, rightArray);
+		int[] merged = ArrayUtil.mergeSortedArrays(leftArray, rightArray);
 		// copy the merged array back to the original array.
-		SorterUtil.copyArray(merged, 0, arrayToSort, startIndex, merged.length);
-	}
-
-	/**
-	 * Returns a merged sorted array from the given sorted arrays.
-	 *
-	 * @param firstArray The first sorted array.
-	 * @param secondArray The second sorted array.
-	 *
-	 * @return A sorted array.
-	 */
-	public static int[] merge(int[] firstArray, int[] secondArray)
-	{
-		int[] mergeTo = new int[firstArray.length + secondArray.length];
-		int firstIndex = 0;
-		int secondIndex = 0;
-		for (int i = 0; i < mergeTo.length; i++)
-		{
-
-			if (firstIndex == firstArray.length)
-			{
-				// copy rest of second array as first array has all been copied.
-				SorterUtil.copyArray(secondArray, secondIndex, mergeTo, i);
-				break;
-			}
-			else if (secondIndex == secondArray.length)
-			{
-				// copy rest of first array as second array has all been copied.
-				SorterUtil.copyArray(firstArray, firstIndex, mergeTo, i);
-				break;
-			}
-			else if (firstArray[firstIndex] < secondArray[secondIndex])
-			{
-				mergeTo[i] = firstArray[firstIndex];
-				firstIndex++;
-			}
-			else
-			{
-				mergeTo[i] = secondArray[secondIndex];
-				secondIndex++;
-			}
-		}
-		return mergeTo;
+		ArrayUtil.copyArray(merged, 0, arrayToSort, startIndex, merged.length);
 	}
 }
