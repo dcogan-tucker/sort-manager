@@ -1,7 +1,6 @@
 package com.sparta.dominic.tree;
 
 import com.sparta.dominic.exception.ChildNotFoundException;
-import com.sparta.dominic.tree.BinaryTree;
 
 public class BinarySearchTree implements BinaryTree
 {
@@ -9,7 +8,7 @@ public class BinarySearchTree implements BinaryTree
 	 * Each node in the tree has an int value and points to its left and
 	 * right child. If it doesn't have any children these values will be null.
 	 */
-	private static class Node
+	protected static class Node
 	{
 		private final int value;
 		private Node leftChild;
@@ -18,6 +17,21 @@ public class BinarySearchTree implements BinaryTree
 		public Node(int value)
 		{
 			this.value = value;
+		}
+
+		public int getValue()
+		{
+			return value;
+		}
+
+		public Node getLeftChild()
+		{
+			return leftChild;
+		}
+
+		public Node getRightChild()
+		{
+			return rightChild;
 		}
 	}
 
@@ -54,7 +68,7 @@ public class BinarySearchTree implements BinaryTree
 	}
 
 	/**
-	 * Add the given element to the tree at the appropriate posiiton.
+	 * Add the given element to the tree at the appropriate position.
 	 *
 	 * @param element The element to add.
 	 */
@@ -71,7 +85,6 @@ public class BinarySearchTree implements BinaryTree
 		{
 			addElementHelper(element, root);
 		}
-
 	}
 
 	/*
@@ -83,11 +96,13 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.rightChild == null)
 			{
+				// Reach end of branch add element here.
 				current.rightChild = new Node(element);
 				size++;
 			}
 			else
 			{
+				// Add element to right subtree.
 				addElementHelper(element, current.rightChild);
 			}
 		}
@@ -95,11 +110,13 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.leftChild == null)
 			{
+				// Reached end of branch add element here.
 				current.leftChild = new Node(element);
 				size++;
 			}
 			else
 			{
+				// Add element to left subtree.
 				addElementHelper(element, current.leftChild);
 			}
 		}
@@ -147,10 +164,12 @@ public class BinarySearchTree implements BinaryTree
 		}
 		else if (value > current.value)
 		{
+			// Recursively look down right subtree.
 			return findElementHelper(value, current.rightChild);
 		}
 		else
 		{
+			// Recursively look down left subtree.
 			return findElementHelper(value, current.leftChild);
 		}
 	}
@@ -183,6 +202,7 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.leftChild == null)
 			{
+				// Given node value doesn't have a left child.
 				throw new ChildNotFoundException("There is no child to the left of the value " + element + ".");
 			}
 			else
@@ -194,10 +214,12 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.rightChild == null)
 			{
+				// Given node value doesn't exist in the tree.
 				throw new ChildNotFoundException("There is no node with the value " + element + ".");
 			}
 			else
 			{
+				// Get left child of element in right subtree.
 				return getLeftChildHelper(element, current.rightChild);
 			}
 		}
@@ -205,10 +227,12 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.leftChild == null)
 			{
+				// Given node value doesn't exist in the tree.
 				throw new ChildNotFoundException("There is no node with the value " + element + ".");
 			}
 			else
 			{
+				// Get left child of element in left subtree.
 				return getLeftChildHelper(element, current.leftChild);
 			}
 		}
@@ -242,6 +266,7 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.rightChild == null)
 			{
+				// Given node value doesn't have a right child.
 				throw new ChildNotFoundException("There is no child to the left of the value " + element + ".");
 			}
 			else
@@ -253,10 +278,12 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.rightChild == null)
 			{
+				// Given node value doesn't exist in the tree.
 				throw new ChildNotFoundException("There is no node with the value " + element + ".");
 			}
 			else
 			{
+				// Get left child of element in right subtree.
 				return getLeftChildHelper(element, current.rightChild);
 			}
 		}
@@ -264,10 +291,12 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.leftChild == null)
 			{
+				// Given node value doesn't exist in the tree.
 				throw new ChildNotFoundException("There is no node with the value " + element + ".");
 			}
 			else
 			{
+				// Get left child of element in left subtree.
 				return getLeftChildHelper(element, current.leftChild);
 			}
 		}
@@ -295,16 +324,19 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.leftChild != null)
 			{
+				// add left subtree to the sorted array.
 				index = getSortedTreeAscHelper(sortedTree, index, current.leftChild);
 				index++;
 			}
 
+			// add the current value to the sorted array.
 			sortedTree[index] = current.value;
 
 			if (current.rightChild != null)
 			{
+				// add right subtree to the sorted array.
 				index++;
-				getSortedTreeAscHelper(sortedTree, index, current.rightChild);
+				index = getSortedTreeAscHelper(sortedTree, index, current.rightChild);
 			}
 		}
 		return index;
@@ -332,16 +364,19 @@ public class BinarySearchTree implements BinaryTree
 		{
 			if (current.rightChild != null)
 			{
+				// add right subtree to the sorted array.
 				index = getSortedTreeDscHelper(sortedTree, index, current.rightChild);
 				index++;
 			}
 
+			// add current value to the sorted array.
 			sortedTree[index] = current.value;
 
 			if (current.leftChild != null)
 			{
+				// add left subtree to the sorted array.
 				index++;
-				getSortedTreeDscHelper(sortedTree, index, current.leftChild);
+				index = getSortedTreeDscHelper(sortedTree, index, current.leftChild);
 			}
 		}
 		return index;
