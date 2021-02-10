@@ -2,7 +2,8 @@ package com.sparta.dominic.sorter;
 
 import com.sparta.dominic.exception.EmptyArrayException;
 import com.sparta.dominic.exception.NullArrayException;
-import com.sparta.dominic.printer.Printer;
+import com.sparta.dominic.util.ArrayUtil;
+import com.sparta.dominic.util.Printer;
 
 public class BubbleSorter implements Sorter
 {
@@ -19,7 +20,7 @@ public class BubbleSorter implements Sorter
 		// Check for null and empty arrays.
 		try
 		{
-			SorterUtil.nullAndEmptyArrayChecker(arrayToSort);
+			ArrayUtil.nullAndEmptyArrayChecker(arrayToSort);
 		for (int i = 1; i < arrayToSort.length; i++)
 		{
 			boolean swapped = false;
@@ -28,7 +29,7 @@ public class BubbleSorter implements Sorter
 				if (arrayToSort[j] > arrayToSort[j + 1])
 				{
 					// Swap the elements at index j and j + 1 in the array.
-					SorterUtil.swapElements(arrayToSort, j, (j + 1));
+					ArrayUtil.swapArrayElements(arrayToSort, j, (j + 1));
 					swapped = true;
 				}
 			}

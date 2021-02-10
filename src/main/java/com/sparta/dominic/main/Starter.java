@@ -1,7 +1,7 @@
 package com.sparta.dominic.main;
 
 import com.sparta.dominic.sorter.*;
-import com.sparta.dominic.printer.Printer;
+import com.sparta.dominic.util.Printer;
 
 import java.util.Arrays;
 
