@@ -1,4 +1,4 @@
-package com.sparta.dominic.util;
+package com.sparta.dominic.printer;
 
 public class Printer
 {

@@ -2,7 +2,7 @@ package com.sparta.dominic.sorter;
 
 import com.sparta.dominic.exception.EmptyArrayException;
 import com.sparta.dominic.exception.NullArrayException;
-import com.sparta.dominic.util.Printer;
+import com.sparta.dominic.printer.Printer;
 
 public class MergeSorter implements Sorter
 {
