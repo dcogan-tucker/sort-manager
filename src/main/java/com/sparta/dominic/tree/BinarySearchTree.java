@@ -46,6 +46,16 @@ public class BinarySearchTree implements BinaryTree
 	private int size;
 
 	/**
+	 * Returns the root node of the tree.
+	 *
+	 * @return The root node of the tree.
+	 */
+	public Node getRootNode()
+	{
+		return root;
+	}
+
+	/**
 	 * Returns the value of the root node in the tree.
 	 *
 	 * @return The value of the root node.
