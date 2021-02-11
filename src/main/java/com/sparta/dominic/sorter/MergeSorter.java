@@ -1,60 +1,66 @@
 package com.sparta.dominic.sorter;
 
-import com.sparta.dominic.exception.EmptyArrayException;
-import com.sparta.dominic.exception.NullArrayException;
-import com.sparta.dominic.util.ArrayUtil;
-import com.sparta.dominic.util.Printer;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MergeSorter implements Sorter
+public class MergeSorter<T extends Comparable<T>> implements Sorter<T>
 {
-
-	/**
-	 * Sorts the given array into ascending order using merge  sort.
-	 *
-	 * @param arrayToSort The array to sort.
-	 */
 	@Override
-	public int[] sortArray(int[] arrayToSort)
+	public List<T> sortListAsc(List<T> listToSort)
 	{
-		try
-		{
-			ArrayUtil.nullAndEmptyArrayChecker(arrayToSort);
-			sortAuxiliary(arrayToSort, 0, arrayToSort.length - 1);
-		} catch (EmptyArrayException | NullArrayException e)
-		{
-			Printer.printMessage(e.getMessage());
-		}
-		return arrayToSort;
+		sortList(listToSort, true);
+		return listToSort;
 	}
 
-	/*
-	 * Auxiliary method to help perform the sort. This method uses recursion to sort the
-	 * array.
-	 */
-	private static int[] sortAuxiliary(int[] arrayToSort, int startIndex, int  endIndex)
+	@Override
+	public List<T> sortListDesc(List<T> listToSort)
 	{
-		if (startIndex < endIndex)
-		{
-			// find midpoint between start and end index.
-			int midPoint = startIndex + (endIndex - startIndex) / 2;
+		sortList(listToSort, false);
+		return listToSort;
+	}
 
-			// sort the left subarray.
-			sortAuxiliary(arrayToSort, startIndex, midPoint);
-			// sort the right subarray.
-			sortAuxiliary(arrayToSort, (midPoint + 1), endIndex);
-
-			// create left and right temp arrays and merge them.
-			int[] leftArray = new int[midPoint - startIndex + 1];
-			int[] rightArray = new int[endIndex - midPoint];
-
-			// Copy the subarrays to temp arrays.
-			ArrayUtil.copyArray(arrayToSort, startIndex, leftArray, 0);
-			ArrayUtil.copyArray(arrayToSort, (midPoint + 1), rightArray, 0);
-
-			// Merge subarrays.
-			int[] mergedArray = ArrayUtil.mergeSortedArrays(leftArray, rightArray);
-			ArrayUtil.copyArray(mergedArray, 0, arrayToSort, startIndex, mergedArray.length);
+	private void sortList(List<T> list, boolean asAscending)
+	{
+		if (list.size() < 2) {
+			return;
 		}
-		return arrayToSort;
+		int midPoint = list.size()/2;
+		List<T> left = new ArrayList<>(list.subList(0, midPoint));
+		List<T> right = new ArrayList<>(list.subList(midPoint, list.size()));
+
+		// Sort left sublist
+		sortList(left, asAscending);
+		// Sort right sublist
+		sortList(right, asAscending);
+		// Merge sorted left and right sublist.
+		merge(left, right, list, asAscending);
+	}
+
+	private void merge(List<T> leftList, List<T> rightList, List<T> destinationList, boolean asAscending)
+	{
+		int leftIndex = 0;
+		int rightIndex = 0;
+		int listIndex = 0;
+
+		while (leftIndex < leftList.size() && rightIndex < rightList.size())
+		{
+			int comparison = leftList.get(leftIndex).compareTo(rightList.get(rightIndex));
+			if ((asAscending && comparison < 0) || (!asAscending && comparison > 0))
+			{
+				destinationList.set(listIndex++, leftList.get(leftIndex++));
+			}
+			else
+			{
+				destinationList.set(listIndex++, rightList.get(rightIndex++));
+			}
+		}
+		while (leftIndex < leftList.size())
+		{
+			destinationList.set(listIndex++, leftList.get(leftIndex++));
+		}
+		while (rightIndex < rightList.size())
+		{
+			destinationList.set(listIndex++, rightList.get(rightIndex++));
+		}
 	}
 }

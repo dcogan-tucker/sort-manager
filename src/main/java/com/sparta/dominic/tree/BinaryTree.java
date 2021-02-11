@@ -2,22 +2,23 @@ package com.sparta.dominic.tree;
 
 import com.sparta.dominic.exception.ChildNotFoundException;
 
-public interface BinaryTree {
-    int getRootElement();
+import java.util.List;
 
-    int getNumberOfElements();
+public interface BinaryTree<T extends Comparable<T>>
+{
+	T getRootElement();
 
-    void addElement(int element);
+	int getNumberOfElements();
 
-    void addElements(int[] elements);
+	void addElement(T element);
 
-    boolean findElement(int value);
+	void addElements(List<T> elements);
 
-    int getLeftChild(int element) throws ChildNotFoundException;
+	boolean hasElement(T element);
 
-    int getRightChild(int element) throws ChildNotFoundException;
+	T getLeftChild(T element) throws ChildNotFoundException;
 
-    int[] getSortedTreeAsc();
+	T getRightChild(T element) throws ChildNotFoundException;
 
-    int[] getSortedTreeDesc();
+	void clear();
 }

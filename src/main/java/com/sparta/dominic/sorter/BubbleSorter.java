@@ -1,45 +1,52 @@
 package com.sparta.dominic.sorter;
 
-import com.sparta.dominic.exception.EmptyArrayException;
-import com.sparta.dominic.exception.NullArrayException;
+import com.sparta.dominic.exception.EmptyListException;
+import com.sparta.dominic.exception.NullListException;
 import com.sparta.dominic.util.ArrayUtil;
 import com.sparta.dominic.util.Printer;
 
-public class BubbleSorter implements Sorter
+import java.util.List;
+
+public class BubbleSorter<T extends Comparable<T>> implements Sorter<T>
 {
-	/**
-	 * Sorts the given array into ascending order using bubble sort.
-	 *
-	 * @param arrayToSort The array to sort.
-	 *
-	 * @return The sorted array.
-	 */
 	@Override
-	public int[] sortArray(int[] arrayToSort)
+	public List<T> sortListAsc(List<T> listToSort)
+	{
+		return sortList(listToSort, true);
+	}
+
+	@Override
+	public List<T> sortListDesc(List<T> listToSort)
+	{
+		return sortList(listToSort, false);
+	}
+
+	public List<T> sortList(List<T> listToSort, boolean asAscending)
 	{
 		// Check for null and empty arrays.
 		try
 		{
-			ArrayUtil.nullAndEmptyArrayChecker(arrayToSort);
-		for (int i = 1; i < arrayToSort.length; i++)
-		{
-			boolean swapped = false;
-			for (int j = 0; j < arrayToSort.length - i; j++)
+			ArrayUtil.nullAndEmptyListChecker(listToSort);
+			for (int i = 1; i < listToSort.size(); i++)
 			{
-				if (arrayToSort[j] > arrayToSort[j + 1])
+				boolean swapped = false;
+				for (int j = 0; j < listToSort.size() - i; j++)
 				{
-					// Swap the elements at index j and j + 1 in the array.
-					ArrayUtil.swapArrayElements(arrayToSort, j, (j + 1));
-					swapped = true;
+					int comparison = listToSort.get(j).compareTo(listToSort.get(j + 1));
+					if ((asAscending && comparison > 0) || (!asAscending && comparison < 0))
+					{
+						// Swap the elements at index j and j + 1 in the array.
+						ArrayUtil.swapArrayElements(listToSort, j, (j + 1));
+						swapped = true;
+					}
 				}
+				// Array was already sorted.
+				if (!swapped) break;
 			}
-			// Array was already sorted.
-			if (!swapped) break;
-		}
-		} catch (EmptyArrayException | NullArrayException e)
+		} catch (EmptyListException | NullListException e)
 		{
 			Printer.printMessage(e.getMessage());
 		}
-		return arrayToSort;
+		return listToSort;
 	}
 }

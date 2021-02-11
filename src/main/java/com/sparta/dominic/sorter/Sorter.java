@@ -1,6 +1,10 @@
 package com.sparta.dominic.sorter;
 
-public interface Sorter
+import java.util.List;
+
+public interface Sorter<T extends Comparable<T>>
 {
-	int[] sortArray(int[] arrayToSort);
+	List<T> sortListAsc(List<T> listToSort);
+
+	List<T> sortListDesc(List<T> listToSort);
 }

@@ -4,13 +4,13 @@ import com.sparta.dominic.util.Printer;
 
 public class BinaryTreePrinter
 {
-	public static void print(BinarySearchTree binarySearchTree) {
+	public static <T extends Comparable<T>> void print(BinarySearchTree<T> binarySearchTree) {
 		StringBuilder buffer = new StringBuilder(50);
 		print(binarySearchTree.getRootNode(), buffer,"", "");
 		Printer.printMessage(buffer.toString());
 	}
 
-	private static void print(BinarySearchTree.Node nodeToPrint, StringBuilder buffer, String prefix, String childrenPrefix) {
+	private static <T extends Comparable<T>> void print(BinarySearchTree.Node<T> nodeToPrint, StringBuilder buffer, String prefix, String childrenPrefix) {
 		buffer.append(prefix);
 		buffer.append(nodeToPrint.getValue());
 		buffer.append('\n');
