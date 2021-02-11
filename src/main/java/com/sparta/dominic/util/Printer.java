@@ -22,4 +22,9 @@ public class Printer
 	{
 		System.out.printf(formatString + "\n", args);
 	}
+
+	public static void printNewLine()
+	{
+		System.out.println();
+	}
 }

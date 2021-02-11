@@ -1,11 +1,15 @@
 package com.sparta.dominic.main;
 
+import com.sparta.dominic.exception.EmptyListException;
+import com.sparta.dominic.exception.NullListException;
+import com.sparta.dominic.logger.SortManagerLogger;
 import com.sparta.dominic.sorter.Sorter;
 import com.sparta.dominic.sorter.SorterFactory;
 import com.sparta.dominic.sorter.SorterType;
-import com.sparta.dominic.util.ArrayUtil;
+import com.sparta.dominic.util.ListUtil;
 import com.sparta.dominic.util.Printer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Starter
@@ -16,15 +20,15 @@ public class Starter
 
 	public static void start()
 	{
-		bubbleSort();
-		mergeSort();
-		binaryTree();
+		bubbleSortExamples();
+		mergeSortExamples();
+		binarySortExamples();
 	}
 
 	/*
 	 * Bubble sort for a random Integer, Double and Character list.
 	 */
-	private static void bubbleSort()
+	private static void bubbleSortExamples()
 	{
 		Printer.printMessage("------BUBBLE SORT------");
 		Printer.printMessage("----INTEGER SORTING----");
@@ -47,7 +51,7 @@ public class Starter
 	/*
 	 * Merge sort for a random Integer, Double and Character list.
 	 */
-	private static void mergeSort()
+	private static void mergeSortExamples()
 	{
 		Printer.printMessage("------MERGE SORT------");
 		Printer.printMessage("----INTEGER SORTING----");
@@ -69,7 +73,7 @@ public class Starter
 	/*
 	 * Binary tree sort for a random Integer, Double and Character list.
 	 */
-	private static void binaryTree()
+	private static void binarySortExamples()
 	{
 		Printer.printMessage("------BINARY SORT------");
 		Printer.printMessage("----INTEGER SORTING----");
@@ -97,16 +101,16 @@ public class Starter
 		String order;
 		if (clazz != Character.class)
 		{
-			listToSort = ArrayUtil.createRandomList(-50, 50, 10, clazz);
+			listToSort = ListUtil.createRandomList(-50, 50, 10, clazz);
 			order = asAscending ? "ascending" : "descending";
 		}
 		else
 		{
-			listToSort = ArrayUtil.createRandomList('a', 'z', 10, clazz);
+			listToSort = ListUtil.createRandomList('a', 'z', 10, clazz);
 			order =  asAscending ? "alphabetical" : "reverse alphabetical";
 		}
-		Printer.printFormattedMessage("Sorting the list %s into %s order...",
-				listToSort, order);
+		Printer.printFormattedMessage("Sorting the list %s into %s order using a %s...",
+				listToSort, order, sorter.getClass().getSimpleName());
 		long start = System.nanoTime();
 		List<T> sortedList = sortList(listToSort, sorter, asAscending);
 		long endTime = System.nanoTime();
@@ -120,12 +124,20 @@ public class Starter
 	private static <T extends Comparable<T>> List<T> sortList(List<T> listToSort, Sorter<T> sorter, boolean asAscending)
 	{
 		List<T> sortedList;
-		if (asAscending)
+		try
 		{
-			sortedList = sorter.sortListAsc(listToSort);
-		} else
+			if (asAscending)
+			{
+				sortedList = sorter.sortListAsc(listToSort);
+			} else
+			{
+				sortedList = sorter.sortListDesc(listToSort);
+			}
+		} catch (EmptyListException | NullListException e)
 		{
-			sortedList = sorter.sortListDesc(listToSort);
+			sortedList = new ArrayList<>();
+			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using " + sorter.getClass().getSimpleName() + " " + e.getMessage(), e);
+			Printer.printNewLine();
 		}
 		return sortedList;
 	}

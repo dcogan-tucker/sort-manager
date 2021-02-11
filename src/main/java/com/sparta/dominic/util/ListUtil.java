@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ArrayUtil
+public class ListUtil
 {
 	public static <T extends Comparable<T>> List<T> createRandomList(int min, int max, int amount, Class<T> clazz)
 	{
@@ -34,9 +34,9 @@ public class ArrayUtil
 	public static <T extends Comparable<T>> void nullAndEmptyListChecker(List<T> listToSort) throws NullListException, EmptyListException
 	{
 		if (listToSort == null)
-			throw new NullListException("");
+			throw new NullListException("Can not sort a null list.");
 		if (listToSort.size() == 0)
-			throw new EmptyListException("");
+			throw new EmptyListException("Can not sort an empty list.");
 	}
 
 	public static <T extends Comparable<T>> void swapArrayElements(List<T> listToSort, int firstIndex, int secondIndex)
