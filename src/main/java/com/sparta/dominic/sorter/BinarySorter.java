@@ -3,15 +3,24 @@ package com.sparta.dominic.sorter;
 import com.sparta.dominic.exception.EmptyListException;
 import com.sparta.dominic.exception.NullListException;
 import com.sparta.dominic.tree.BinarySearchTree;
-import com.sparta.dominic.tree.BinaryTree;
 import com.sparta.dominic.util.ListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that can sort given lists of any comparable type into ascending or descending order using binary search trees.
+ *
+ * @param <T> The type of Object to sort, must be of Comparable.
+ */
 public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 {
 	private final BinarySearchTree<T> BST = new BinarySearchTree<>();
+
+	/*
+	 * Protected as should only be called by the SorterFactory.
+	 */
+	protected BinarySorter() {}
 
 	@Override
 	public List<T> sortListAsc(List<T> listToSort) throws NullListException, EmptyListException
@@ -24,6 +33,9 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 		return sortedList;
 	}
 
+	/*
+	 * Helper method for the sortListAsc method.
+	 */
 	private void sortedListAscHelper(List<T> sortedList, BinarySearchTree.Node<T> current)
 	{
 		if (sortedList.size() < BST.getNumberOfElements())
@@ -56,6 +68,9 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 		return sortedList;
 	}
 
+	/*
+	 * Helper method for the sortListDesc method.
+	 */
 	private void sortedListDescHelper(List<T> sortedList, BinarySearchTree.Node<T> current)
 	{
 		if (sortedList.size() < BST.getNumberOfElements())

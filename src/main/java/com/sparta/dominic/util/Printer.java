@@ -1,6 +1,9 @@
 package com.sparta.dominic.util;
 
-public class Printer
+/**
+ * Wrapper class to System.out print methods.
+ */
+public final class Printer
 {
 	/**
 	 * Print the given message to the console.
@@ -23,6 +26,9 @@ public class Printer
 		System.out.printf(formatString + "\n", args);
 	}
 
+	/**
+	 * Print a empty line.
+	 */
 	public static void printNewLine()
 	{
 		System.out.println();

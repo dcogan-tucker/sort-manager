@@ -2,27 +2,39 @@ package com.sparta.dominic.tree;
 
 import com.sparta.dominic.util.Printer;
 
-public class BinaryTreePrinter
+/**
+ * Class to print a BinarySearchTree.
+ */
+public final class BinaryTreePrinter
 {
+	/**
+	 * Print the given BinarySearchTree.
+	 *
+	 * @param binarySearchTree The BinarySearchTree to print.
+	 * @param <T> The type of Object in the tree.
+	 */
 	public static <T extends Comparable<T>> void print(BinarySearchTree<T> binarySearchTree) {
 		StringBuilder buffer = new StringBuilder(50);
-		print(binarySearchTree.getRootNode(), buffer,"", "");
+		printHelper(binarySearchTree.getRootNode(), buffer,"", "");
 		Printer.printMessage(buffer.toString());
 	}
 
-	private static <T extends Comparable<T>> void print(BinarySearchTree.Node<T> nodeToPrint, StringBuilder buffer, String prefix, String childrenPrefix) {
+	/*
+	 * Helper for the print method.
+	 */
+	private static <T extends Comparable<T>> void printHelper(BinarySearchTree.Node<T> nodeToPrint, StringBuilder buffer, String prefix, String childrenPrefix) {
 		buffer.append(prefix);
 		buffer.append(nodeToPrint.getValue());
 		buffer.append('\n');
 
 		if (nodeToPrint.getRightChild() != null)
 		{
-			print(nodeToPrint.getRightChild(), buffer, childrenPrefix + "├── ", childrenPrefix + "│   ");
+			printHelper(nodeToPrint.getRightChild(), buffer, childrenPrefix + "├── ", childrenPrefix + "│   ");
 		}
 
 		if (nodeToPrint.getLeftChild() != null)
 		{
-			print(nodeToPrint.getLeftChild(), buffer, "│   " + childrenPrefix + "\n" + childrenPrefix + "├── ", childrenPrefix + "│   ");
+			printHelper(nodeToPrint.getLeftChild(), buffer, "│   " + childrenPrefix + "\n" + childrenPrefix + "├── ", childrenPrefix + "│   ");
 		}
 	}
 }

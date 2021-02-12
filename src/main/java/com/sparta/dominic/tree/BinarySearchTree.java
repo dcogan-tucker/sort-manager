@@ -4,8 +4,19 @@ import com.sparta.dominic.exception.ChildNotFoundException;
 
 import java.util.List;
 
+/**
+ * Class that represents a Binary Search Tree with methods to add elements, check if a certain
+ * element exists and get the left or right child of a given element.
+ *
+ * @param <T> The Object type that the tree stores, must be comparable.
+ */
 public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 {
+	/**
+	 * Node of a BinarySearchTree which contains the node value and its left and right children.
+	 *
+	 * @param <T> The Object type of the Node value, must be comparable.
+	 */
 	public static class Node<T>
 	{
 		private final T value;
@@ -37,6 +48,11 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 
 	private int size;
 
+	/**
+	 * Returns the root node of the tree.
+	 *
+	 * @return The root node of the tree.
+	 */
 	public Node<T> getRootNode()
 	{
 		return root;
@@ -68,6 +84,9 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 		}
 	}
 
+	/*
+	 * Helper method for addElement.
+	 */
 	private void addElementHelper(T element, Node<T> current)
 	{
 		int comparison = element.compareTo(current.value);
@@ -109,6 +128,9 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 		return hasElementHelper(element, root);
 	}
 
+	/*
+	 * Helper method for hasElement.
+	 */
 	private boolean hasElementHelper(T element, Node<T> current)
 	{
 		if (current == null)
@@ -137,6 +159,9 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 		return getLeftChildHelper(element, root);
 	}
 
+	/*
+	 * Helper method for getLeftChild.
+	 */
 	private T getLeftChildHelper(T element, Node<T> current) throws ChildNotFoundException
 	{
 		if (current == null)
@@ -165,6 +190,9 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 		return getRightChildHelper(element, root);
 	}
 
+	/*
+	 * Helper method for getRightChild.
+	 */
 	private T getRightChildHelper(T element, Node<T> current) throws ChildNotFoundException
 	{
 		if (current == null)
@@ -187,6 +215,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 		}
 	}
 
+	@Override
 	public void clear()
 	{
 		root = null;

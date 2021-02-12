@@ -7,13 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ListUtil
+/**
+ * Class providing static list utility methods.
+ */
+public final class ListUtil
 {
-	public static <T extends Comparable<T>> List<T> createRandomList(int min, int max, int amount, Class<T> clazz)
+	/**
+	 * Returns a random list of a the given class that extends comparable of the given size with values between the
+	 * given range.
+	 *
+	 * @param min The min value.
+	 * @param max The max value.
+	 * @param size The size of the output list.
+	 * @param clazz The class of the list values.
+	 * @param <T> The Object type, must be comparable.
+	 *
+	 * @return The randomly generated list.
+	 */
+	public static <T extends Comparable<T>> List<T> createRandomList(int min, int max, int size, Class<T> clazz)
 	{
-		List<T> result = new ArrayList<>(amount);
+		List<T> result = new ArrayList<>(size);
 		Random randomGen = new Random();
-		for (int i = 0; i < amount; i++)
+		for (int i = 0; i < size; i++)
 		{
 			if (clazz == Integer.class)
 			{
@@ -31,15 +46,30 @@ public class ListUtil
 		return result;
 	}
 
-	public static <T extends Comparable<T>> void nullAndEmptyListChecker(List<T> listToSort) throws NullListException, EmptyListException
+	/**
+	 * Checks if the given list is null or empty.
+	 *
+	 * @param listToCheck The list to check.
+	 * @throws NullListException If the given list is null.
+	 * @throws EmptyListException If the given list is empty.
+	 */
+	public static void nullAndEmptyListChecker(List<?> listToCheck) throws NullListException, EmptyListException
 	{
-		if (listToSort == null)
+		if (listToCheck == null)
 			throw new NullListException("Can not sort a null list.");
-		if (listToSort.size() == 0)
+		if (listToCheck.size() == 0)
 			throw new EmptyListException("Can not sort an empty list.");
 	}
 
-	public static <T extends Comparable<T>> void swapArrayElements(List<T> listToSort, int firstIndex, int secondIndex)
+	/**
+	 * Swap the given elements in the given list.
+	 *
+	 * @param listToSort The list to swap elements in.
+	 * @param firstIndex The index of the first element.
+	 * @param secondIndex The index of the second element.
+	 * @param <T> The type of Object in the list.
+	 */
+	public static <T> void swapArrayElements(List<T> listToSort, int firstIndex, int secondIndex)
 	{
 		T temp = listToSort.get(firstIndex);
 		listToSort.set(firstIndex, listToSort.get(secondIndex));

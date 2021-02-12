@@ -6,8 +6,18 @@ import com.sparta.dominic.util.ListUtil;
 
 import java.util.List;
 
+/**
+ * Class that can sort given lists of any comparable type into ascending or descending order using bubble sort.
+ *
+ * @param <T> The type of Object to sort, must be of Comparable.
+ */
 public class BubbleSorter<T extends Comparable<T>> implements Sorter<T>
 {
+	/*
+	 * Protected as should only be called by the SorterFactory.
+	 */
+	protected BubbleSorter() {}
+
 	@Override
 	public List<T> sortListAsc(List<T> listToSort) throws NullListException, EmptyListException
 	{
@@ -20,7 +30,10 @@ public class BubbleSorter<T extends Comparable<T>> implements Sorter<T>
 		return sortList(listToSort, false);
 	}
 
-	public List<T> sortList(List<T> listToSort, boolean asAscending) throws NullListException, EmptyListException
+	/*
+	 * Helper method to sortList into ascending or descending order.
+	 */
+	private List<T> sortList(List<T> listToSort, boolean asAscending) throws NullListException, EmptyListException
 	{
 		// Check for null and empty arrays.
 		ListUtil.nullAndEmptyListChecker(listToSort);

@@ -7,8 +7,18 @@ import com.sparta.dominic.util.ListUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that can sort given lists of any comparable type into ascending or descending order using merge sort.
+ *
+ * @param <T> The type of Object to sort, must be of Comparable.
+ */
 public class MergeSorter<T extends Comparable<T>> implements Sorter<T>
 {
+	/*
+	 * Protected as should only be called by the SorterFactory.
+	 */
+	protected MergeSorter() {}
+
 	@Override
 	public List<T> sortListAsc(List<T> listToSort) throws NullListException, EmptyListException
 	{
@@ -23,6 +33,9 @@ public class MergeSorter<T extends Comparable<T>> implements Sorter<T>
 		return listToSort;
 	}
 
+	/*
+	 * Helper method to sortList into ascending or descending order.
+	 */
 	private void sortList(List<T> listToSort, boolean asAscending) throws NullListException, EmptyListException
 	{
 		ListUtil.nullAndEmptyListChecker(listToSort);
@@ -41,6 +54,9 @@ public class MergeSorter<T extends Comparable<T>> implements Sorter<T>
 		merge(left, right, listToSort, asAscending);
 	}
 
+	/*
+	 * Merge two sorted lists into ascending or descending order.
+	 */
 	private void merge(List<T> leftList, List<T> rightList, List<T> destinationList, boolean asAscending)
 	{
 		int leftIndex = 0;
