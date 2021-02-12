@@ -23,28 +23,35 @@ public final class BinaryTreePrinter
 	 * Helper for the print method.
 	 */
 	private static <T extends Comparable<T>> void printHelper(BinarySearchTree.Node<T> nodeToPrint, StringBuilder buffer, String prefix, String childrenPrefix) {
-		buffer.append(prefix);
-		buffer.append(nodeToPrint.getValue());
-		buffer.append('\n');
-
-		if (nodeToPrint.getRightChild() != null)
+		if (nodeToPrint != null)
 		{
-			printHelper(nodeToPrint.getRightChild(), buffer, childrenPrefix + "├── ", childrenPrefix + "│   ");
+			buffer.append(prefix);
+			buffer.append(nodeToPrint.getValue());
+			buffer.append('\n');
+
+			if (nodeToPrint.getRightChild() != null)
+			{
+				printHelper(nodeToPrint.getRightChild(), buffer, childrenPrefix + "├── ", childrenPrefix + "│   ");
+			}
+			else
+			{
+				buffer.append(childrenPrefix);
+				buffer.append("├── null\n");
+			}
+
+			if (nodeToPrint.getLeftChild() != null)
+			{
+				printHelper(nodeToPrint.getLeftChild(), buffer, "│   " + childrenPrefix + "\n" + childrenPrefix + "├── ", childrenPrefix + "│   ");
+			}
+			else
+			{
+				buffer.append(childrenPrefix);
+				buffer.append("├── null\n");
+			}
 		}
 		else
 		{
-			buffer.append(childrenPrefix);
-			buffer.append("├── null\n");
-		}
-
-		if (nodeToPrint.getLeftChild() != null)
-		{
-			printHelper(nodeToPrint.getLeftChild(), buffer, "│   " + childrenPrefix + "\n" + childrenPrefix + "├── ", childrenPrefix + "│   ");
-		}
-		else
-		{
-			buffer.append(childrenPrefix);
-			buffer.append("├── null\n");
+			buffer.append("null\n ├── null\n ├── null\n");
 		}
 	}
 }
