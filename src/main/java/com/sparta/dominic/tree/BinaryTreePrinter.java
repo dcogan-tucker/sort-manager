@@ -31,10 +31,20 @@ public final class BinaryTreePrinter
 		{
 			printHelper(nodeToPrint.getRightChild(), buffer, childrenPrefix + "├── ", childrenPrefix + "│   ");
 		}
+		else
+		{
+			buffer.append(childrenPrefix);
+			buffer.append("├── null\n");
+		}
 
 		if (nodeToPrint.getLeftChild() != null)
 		{
 			printHelper(nodeToPrint.getLeftChild(), buffer, "│   " + childrenPrefix + "\n" + childrenPrefix + "├── ", childrenPrefix + "│   ");
+		}
+		else
+		{
+			buffer.append(childrenPrefix);
+			buffer.append("├── null\n");
 		}
 	}
 }
