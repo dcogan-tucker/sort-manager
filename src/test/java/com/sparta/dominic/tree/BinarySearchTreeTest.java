@@ -21,11 +21,30 @@ public class BinarySearchTreeTest
 	}
 
 	@Test
-	void addElementToEmptyTreeSetsItAsTheValueOfTheRoot()
+	void addElementToEmptyTreeSetsItAsTheValueOfTheRootTreeSizeShouldBe1()
 	{
 		BINARY_SEARCH_TREE.addElement(25);
 
 		Assertions.assertEquals(Integer.valueOf(25), BINARY_SEARCH_TREE.getRootElement());
+		Assertions.assertEquals(1, BINARY_SEARCH_TREE.getNumberOfElements());
+	}
+
+	@Test
+	void add10UniqueElementsToEmptyTreeSizeShouldBe10()
+	{
+		BINARY_SEARCH_TREE.addElements(new ArrayList<>(
+				Arrays.asList(5, 4, 7, 6, 3, 2, 8, 9, 10, 1)));
+
+		Assertions.assertEquals(10, BINARY_SEARCH_TREE.getNumberOfElements());
+	}
+
+	@Test
+	void add15ElementsToEmptyTreeWith5DuplicatesSizeShouldBe10()
+	{
+		BINARY_SEARCH_TREE.addElements(new ArrayList<>(
+				Arrays.asList(5, 4, 7, 6, 3, 2, 8, 9, 10, 1, 1, 2, 3, 4, 5)));
+
+		Assertions.assertEquals(10, BINARY_SEARCH_TREE.getNumberOfElements());
 	}
 
 	@Test
