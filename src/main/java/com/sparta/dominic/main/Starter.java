@@ -4,6 +4,8 @@ import com.sparta.dominic.logger.SortManagerLogger;
 import com.sparta.dominic.sorter.Sorter;
 import com.sparta.dominic.sorter.SorterFactory;
 import com.sparta.dominic.sorter.SorterType;
+import com.sparta.dominic.tree.BinarySearchTree;
+import com.sparta.dominic.tree.BinaryTreePrinter;
 import com.sparta.dominic.util.ListUtil;
 import com.sparta.dominic.util.Printer;
 
@@ -15,6 +17,8 @@ public class Starter
 {
 	private static final Scanner SCANNER = new Scanner(System.in);
 
+	private static Class typeClass;
+
 	private static SorterFactory sorterFactory;
 	private static Sorter sorter;
 	private static List listToSort;
@@ -24,21 +28,41 @@ public class Starter
 	private static int minValue;
 	private static int maxValue;
 	private static int length;
-	private static Class typeClass;
+
+	private static BinarySearchTree binarySearchTree;
 
 	public static void start()
 	{
 		start: while (true)
 		{
-			typeSelection();
-			sortSelection();
-			parameterSelection();
-			generateArrayToSort();
-			printListAndSortDetails();
+			while (true)
+			{
+				Printer.printMessage("Select Function:\n" +
+						"1 : Sorters\n" +
+						"2 : Binary Trees");
+				boolean selectionSuccessful = true;
+				if (SCANNER.hasNextInt())
+				{
+					int selection = SCANNER.nextInt();
+					switch (selection)
+					{
+						case 1:
+							sorterLoop();
+							break;
+						case 2:
+							treeLoop();
+							break;
+						default:
+							selectionSuccessful = false;
+					}
+				}
+				if (selectionSuccessful)
+					break;
+			}
 
 			while (true)
 			{
-				Printer.printMessage("Would you like to sort another random array?");
+				Printer.printMessage("Start Again?");
 				if (SCANNER.hasNextLine())
 				{
 					String input = SCANNER.next().toLowerCase();
@@ -59,13 +83,25 @@ public class Starter
 	}
 
 	/*
+	 * Loop for sorter process.
+	 */
+	private static void sorterLoop()
+	{
+		sortFactoryTypeSelection();
+		sortSelection();
+		parameterSelection();
+		generateArrayToSort();
+		printListAndSortDetails();
+	}
+
+	/*
 	 * Select type of value to sort.
 	 */
-	private static void typeSelection()
+	private static void sortFactoryTypeSelection()
 	{
 		while (true)
 		{
-			Printer.printMessage("Select What Type Of Elements To Sort:\n" +
+			Printer.printMessage("Select Element Type:\n" +
 					"1 : Integers\n" +
 					"2 : Doubles\n" +
 					"3 : Characters");
@@ -106,7 +142,7 @@ public class Starter
 	{
 		while (true)
 		{
-			Printer.printMessage("Select What Sort Algorithm To Use:\n" +
+			Printer.printMessage("Select Algorithm:\n" +
 								 "1 : Bubble\n" +
 					  			 "2 : Merge\n" +
 			   					 "3 : Binary");
@@ -155,7 +191,7 @@ public class Starter
 	{
 		while (true)
 		{
-			Printer.printMessage("Input length of randomly generated array:");
+			Printer.printMessage("Input List Size:");
 			if (SCANNER.hasNextInt())
 			{
 				length = SCANNER.nextInt();
@@ -172,23 +208,22 @@ public class Starter
 	{
 		while (true)
 		{
-			Printer.printMessage("Input the minimum value to be generated:");
+			Printer.printMessage("Input Minimum Value:");
 			if (SCANNER.hasNextLine())
 			{
 				String input = SCANNER.next();
-				if (input.length() == 1)
+				if (input.length() == 1 && input.matches("\\w"))
 				{
-					if (input.matches("\\d+"))
-					{
-						minValue = Integer.parseInt(input);
-						break;
-					}
-					else if (input.matches("\\w"))
-					{
-						minValue = input.charAt(0);
-						break;
-					}
+					minValue = input.charAt(0);
+					break;
 				}
+
+				if (input.matches("^-?[0-9]\\d*(\\.\\d+)?$"))
+				{
+					minValue = Integer.parseInt(input);
+					break;
+				}
+
 			}
 			Printer.printMessage("Please make sure the input is valid.");
 		}
@@ -201,22 +236,20 @@ public class Starter
 	{
 		while (true)
 		{
-			Printer.printMessage("Input the maximum value to be generated:");
+			Printer.printMessage("Input Maximum Value:");
 			if (SCANNER.hasNextLine())
 			{
 				String input = SCANNER.next();
-				if (input.length() == 1)
+				if (input.length() == 1 && input.matches("[a-zA-Z]"))
 				{
-					if (input.matches("\\d+"))
-					{
-						maxValue = Integer.parseInt(input);
-						break;
-					}
-					else if (input.matches("\\w"))
-					{
-						maxValue = input.charAt(0);
-						break;
-					}
+					maxValue = input.toLowerCase().charAt(0);
+					break;
+				}
+
+				if (input.matches("^-?[0-9]\\d*(\\.\\d+)?$"))
+				{
+					maxValue = Integer.parseInt(input);
+					break;
 				}
 			}
 			Printer.printMessage("Please make sure the input is valid.");
@@ -230,7 +263,7 @@ public class Starter
 	{
 		ordering: while (true)
 		{
-			Printer.printMessage("The sorted array should be:\n" +
+			Printer.printMessage("Select Ordering:\n" +
 					"1 : Ascending\n" +
 					"2 : Descending");
 			if (SCANNER.hasNextInt())
@@ -244,7 +277,7 @@ public class Starter
 						asAscending = false;
 						break ordering;
 					default:
-						Printer.printMessage("Please make sure the input is valid.");
+						Printer.printMessage("Please select one of the numbered options.");
 				}
 			}
 		}
@@ -291,6 +324,132 @@ public class Starter
 			sortedList = new ArrayList<>();
 			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using " + sorter.getClass().getSimpleName() + " " + e.getMessage(), e);
 			Printer.printNewLine();
+		}
+	}
+
+	/*
+	 * Loop for tree functions.
+	 */
+	private static void treeLoop()
+	{
+		treeTypeSelection();
+		addElementsSelection();
+	}
+
+	/*
+     * Select type of tree and create.
+	 */
+	private static void treeTypeSelection()
+	{
+		while (true)
+		{
+			Printer.printMessage("Select Element Type:\n" +
+					"1 : Integers\n" +
+					"2 : Doubles\n" +
+					"3 : Characters");
+
+			if (SCANNER.hasNextInt())
+			{
+				int typeSelection = SCANNER.nextInt();
+				boolean typeSelectionSuccessful = true;
+				switch (typeSelection)
+				{
+					case 1:
+						binarySearchTree = new BinarySearchTree();
+						typeClass = Integer.class;
+						break;
+					case 2:
+						binarySearchTree = new BinarySearchTree();
+						typeClass = Double.class;
+						break;
+					case 3:
+						binarySearchTree = new BinarySearchTree();
+						typeClass = Character.class;
+						break;
+					default:
+						typeSelectionSuccessful = false;
+						break;
+				}
+				if (typeSelectionSuccessful)
+					break;
+			}
+			Printer.printMessage("Please select one of the numbered options.");
+		}
+	}
+
+	/*
+	 * Select next action.
+	 */
+	private static void addElementsSelection()
+	{
+		start: while (true)
+		{
+			Printer.printMessage("Select:\n" +
+					"1 : Add Element.\n" +
+					"2 : Print Final Tree");
+			if (SCANNER.hasNextInt())
+			{
+				int selection = SCANNER.nextInt();
+				switch (selection)
+				{
+					case 1:
+						addElement();
+						break;
+					case 2:
+						BinaryTreePrinter.print(binarySearchTree);
+						break start;
+					default:
+						Printer.printMessage("Please select one of the numbered options.");
+				}
+			}
+		}
+	}
+
+	/*
+	 * Add element to tree.
+	 */
+	private static void addElement()
+	{
+		while (true)
+		{
+			Printer.printMessage("Input the " + typeClass.getSimpleName() + " to Add:");
+			boolean additionSuccessful = false;
+			String input = null;
+			if (SCANNER.hasNext())
+			{
+				input = SCANNER.next();
+				if (Integer.class.equals(typeClass))
+				{
+					if (input.matches("^-?[0-9]\\d*(\\.\\d+)?$"))
+					{
+						binarySearchTree.addElement(Integer.parseInt(input));
+						additionSuccessful = true;
+					}
+				}
+				else if (Double.class.equals(typeClass))
+				{
+					if (input.matches("(-?(\\\\d)+(\\\\.)?(\\\\d)*)\n"))
+					{
+						binarySearchTree.addElement(Double.parseDouble(input));
+						additionSuccessful = true;
+					}
+				}
+				else
+				{
+					if (input.length() == 1 && input.matches("[a-zA-Z]"))
+					{
+						binarySearchTree.addElement(input.toLowerCase().charAt(0));
+						additionSuccessful = true;
+					}
+				}
+			}
+			
+			if (additionSuccessful)
+			{
+				Printer.printMessage("Adding " + input + " to the tree...");
+				BinaryTreePrinter.print(binarySearchTree);
+				break;
+			}
 		}
 	}
 }
