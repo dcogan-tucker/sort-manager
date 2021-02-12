@@ -1,228 +1,282 @@
 package com.sparta.dominic.main;
 
-import com.sparta.dominic.exception.ChildNotFoundException;
 import com.sparta.dominic.logger.SortManagerLogger;
 import com.sparta.dominic.sorter.Sorter;
 import com.sparta.dominic.sorter.SorterFactory;
 import com.sparta.dominic.sorter.SorterType;
-import com.sparta.dominic.tree.BinarySearchTree;
-import com.sparta.dominic.tree.BinaryTreePrinter;
 import com.sparta.dominic.util.ListUtil;
 import com.sparta.dominic.util.Printer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Starter
 {
-	private static final SorterFactory<Integer> INTEGER_SORTER_FACTORY = new SorterFactory<>();
-	private static final SorterFactory<Double> DOUBLE_SORTER_FACTORY = new SorterFactory<>();
-	private static final SorterFactory<Character> CHARACTER_SORTER_FACTORY = new SorterFactory<>();
+	private static final Scanner SCANNER = new Scanner(System.in);
+
+	private static SorterFactory sorterFactory;
+	private static Sorter sorter;
+	private static List listToSort;
+	private static List sortedList;
+
+	private static boolean asAscending;
+	private static int minValue;
+	private static int maxValue;
+	private static int length;
+	private static Class typeClass;
 
 	public static void start()
 	{
-		bubbleSortExamples();
-		mergeSortExamples();
-		binaryTreeExamples();
-		binarySortExamples();
+		start: while (true)
+		{
+			typeSelection();
+			sortSelection();
+			parameterSelection();
+			generateArrayToSort();
+			printListAndSortDetails();
+
+			while (true)
+			{
+				Printer.printMessage("Would you like to sort another random array?");
+				if (SCANNER.hasNextLine())
+				{
+					String input = SCANNER.next().toLowerCase();
+					switch (input)
+					{
+						case "yes":
+						case "y":
+							continue start;
+						case "no":
+						case "n":
+							break start;
+						default:
+							Printer.printMessage("Please input yes or no.");
+					}
+				}
+			}
+		}
 	}
 
 	/*
-	 * Bubble sort for a random Integer, Double and Character list.
+	 * Select type of value to sort.
 	 */
-	private static void bubbleSortExamples()
+	private static void typeSelection()
 	{
-		Printer.printMessage("------BUBBLE SORT------");
-		Printer.printMessage("----INTEGER SORTING----");
-		Sorter<Integer> integerBubbleSorter = INTEGER_SORTER_FACTORY.createSorter(SorterType.BUBBLE);
-		sortAndPrintRandomList(integerBubbleSorter, true, Integer.class);
-		sortAndPrintRandomList(integerBubbleSorter, false, Integer.class);
+		while (true)
+		{
+			Printer.printMessage("Select What Type Of Elements To Sort:\n" +
+					"1 : Integers\n" +
+					"2 : Doubles\n" +
+					"3 : Characters");
 
-
-		Printer.printMessage("----DOUBLE SORTING----");
-		Sorter<Double> doubleBubbleSorter = DOUBLE_SORTER_FACTORY.createSorter(SorterType.BUBBLE);
-		sortAndPrintRandomList(doubleBubbleSorter, true, Double.class);
-		sortAndPrintRandomList(doubleBubbleSorter, false, Double.class);
-
-		Printer.printMessage("---CHARACTER SORTING---");
-		Sorter<Character> characterBubbleSorter = CHARACTER_SORTER_FACTORY.createSorter(SorterType.BUBBLE);
-		sortAndPrintRandomList(characterBubbleSorter, true, Character.class);
-		sortAndPrintRandomList(characterBubbleSorter, false, Character.class);
+			if (SCANNER.hasNextInt())
+			{
+				int typeSelection = SCANNER.nextInt();
+				boolean typeSelectionSuccessful = true;
+				switch (typeSelection)
+				{
+					case 1:
+						sorterFactory = new SorterFactory<Integer>();
+						typeClass = Integer.class;
+						break;
+					case 2:
+						sorterFactory = new SorterFactory<Double>();
+						typeClass = Double.class;
+						break;
+					case 3:
+						sorterFactory = new SorterFactory<Character>();
+						typeClass = Character.class;
+						break;
+					default:
+						typeSelectionSuccessful = false;
+						break;
+				}
+				if (typeSelectionSuccessful)
+					break;
+			}
+			Printer.printMessage("Please select one of the numbered options.");
+		}
 	}
 
 	/*
-	 * Merge sort for a random Integer, Double and Character list.
+	 * Select sort method.
 	 */
-	private static void mergeSortExamples()
+	private static void sortSelection()
 	{
-		Printer.printMessage("------MERGE SORT------");
-		Printer.printMessage("----INTEGER SORTING----");
-		Sorter<Integer> integerMergeSorter = INTEGER_SORTER_FACTORY.createSorter(SorterType.MERGE);
-		sortAndPrintRandomList(integerMergeSorter, true, Integer.class);
-		sortAndPrintRandomList(integerMergeSorter, false, Integer.class);
+		while (true)
+		{
+			Printer.printMessage("Select What Sort Algorithm To Use:\n" +
+								 "1 : Bubble\n" +
+					  			 "2 : Merge\n" +
+			   					 "3 : Binary");
 
-		Printer.printMessage("----DOUBLE SORTING----");
-		Sorter<Double> doubleMergeSorter = DOUBLE_SORTER_FACTORY.createSorter(SorterType.MERGE);
-		sortAndPrintRandomList(doubleMergeSorter, true, Double.class);
-		sortAndPrintRandomList(doubleMergeSorter, false, Double.class);
-
-		Printer.printMessage("---CHARACTER SORTING---");
-		Sorter<Character> characterMergeSorter = CHARACTER_SORTER_FACTORY.createSorter(SorterType.MERGE);
-		sortAndPrintRandomList(characterMergeSorter, true, Character.class);
-		sortAndPrintRandomList(characterMergeSorter, false, Character.class);
+			if (SCANNER.hasNextInt())
+			{
+				int sorterSelection = SCANNER.nextInt();
+				boolean sorterSelectionSuccessful = true;
+				switch (sorterSelection)
+				{
+					case 1:
+						sorter = sorterFactory.createSorter(SorterType.BUBBLE);
+						break;
+					case 2:
+						sorter = sorterFactory.createSorter(SorterType.MERGE);
+						break;
+					case 3:
+						sorter = sorterFactory.createSorter(SorterType.BINARY);
+						break;
+					default:
+						sorterSelectionSuccessful = false;
+						break;
+				}
+				if (sorterSelectionSuccessful)
+					break;
+			}
+			Printer.printMessage("Please select one of the numbered options.");
+		}
 	}
 
 	/*
-	 * Binary tree examples.
+	 * Select parameters to generate array.
 	 */
-	private static void binaryTreeExamples()
+	private static void parameterSelection()
 	{
-		Printer.printMessage("-----BINARY TREES-----");
-		BinarySearchTree<Integer> integerBinarySearchTree = new BinarySearchTree<>();
-		List<Integer> listToAdd = new ArrayList<>(Arrays.asList(20, 15, 9, 18, 16, 35, 24, 60, 40));
-		Printer.printFormattedMessage("Adding the elements %s to the list...", listToAdd);
-		integerBinarySearchTree.addElements(listToAdd);
-		Printer.printMessage("Printing the Binary Search Tree...\n");
-		BinaryTreePrinter.print(integerBinarySearchTree);
-		Printer.printFormattedMessage("The Binary Search Tree contains %d elements.",
-				integerBinarySearchTree.getNumberOfElements());
-		Integer elementToLookFor = 24;
-		Printer.printFormattedMessage("The binary tree %s contain the element %d.",
-				integerBinarySearchTree.hasElement(elementToLookFor) ? "does" : "does not", elementToLookFor);
-		Integer elementToLookFor2 = 0;
-		Printer.printFormattedMessage("The binary tree %s contain the element %d.",
-				integerBinarySearchTree.hasElement(elementToLookFor2) ? "does" : "does not", elementToLookFor2);
-		Integer elementToLookFor3 = 18;
-		String result;
-		try
-		{
-			Integer leftOfElement = integerBinarySearchTree.getLeftChild(elementToLookFor3);
-			result = "is " + leftOfElement;
-		} catch (Exception e)
-		{
-			result = "does not exist";
-			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
-					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
-		}
-		Printer.printFormattedMessage("The left child of the element %d  %s.",
-				elementToLookFor3, result);
-
-		Integer elementToLookFor4 = 35;
-		try
-		{
-			Integer rightOfElement = integerBinarySearchTree.getRightChild(elementToLookFor4);
-			result = "is " + rightOfElement;
-		} catch (Exception e)
-		{
-			result = "does not exist";
-			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
-					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
-		}
-		Printer.printFormattedMessage("The right child of the element %d  %s.\n",
-				elementToLookFor4, result);
-
-		Integer elementToLookFor5 = 100;
-		try
-		{
-			Integer rightOfElement = integerBinarySearchTree.getRightChild(elementToLookFor5);
-			result = "is " + rightOfElement;
-		} catch (Exception e)
-		{
-			result = "does not exist";
-			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
-					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
-		}
-		Printer.printFormattedMessage("The right child of the element %d  %s.\n",
-				elementToLookFor5, result);
-
-		Integer elementToLookFor6 = 16;
-		try
-		{
-			Integer rightOfElement = integerBinarySearchTree.getRightChild(elementToLookFor6);
-			result = "is " + rightOfElement;
-		} catch (Exception e)
-		{
-			result = "does not exist";
-			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
-					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
-		}
-		Printer.printFormattedMessage("The right child of the element %d  %s.\n",
-				elementToLookFor6, result);
-
-		try
-		{
-			Integer leftOfElement = integerBinarySearchTree.getLeftChild(elementToLookFor6);
-			result = "is " + leftOfElement;
-		} catch (Exception e)
-		{
-			result = "does not exist";
-			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
-					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
-		}
-		Printer.printFormattedMessage("The left child of the element %d  %s.\n",
-				elementToLookFor6, result);
-
-		Printer.printMessage("Clearing the Binary Search Tree...");
-		integerBinarySearchTree.clear();
-		Printer.printMessage("Printing the Binary Search Tree...");
-		BinaryTreePrinter.print(integerBinarySearchTree);
+		lengthSelection();
+		minValueSelection();
+		maxValueSelection();
+		orderingSelection();
 	}
 
 	/*
-	 * Binary sort for a random Integer, Double and Character list.
+	 * The length of the list to generate.
 	 */
-	private static void binarySortExamples()
+	private static void lengthSelection()
 	{
-		Printer.printMessage("------BINARY SORT------");
-		Printer.printMessage("----INTEGER SORTING----");
-		Sorter<Integer> integerBinarySorter = INTEGER_SORTER_FACTORY.createSorter(SorterType.BINARY);
-		sortAndPrintRandomList(integerBinarySorter, true, Integer.class);
-		sortAndPrintRandomList(integerBinarySorter, false, Integer.class);
-
-		Printer.printMessage("----DOUBLE SORTING----");
-		Sorter<Double> doubleBinarySorter = DOUBLE_SORTER_FACTORY.createSorter(SorterType.BINARY);
-		sortAndPrintRandomList(doubleBinarySorter, true, Double.class);
-		sortAndPrintRandomList(doubleBinarySorter, false, Double.class);
-
-		Printer.printMessage("---CHARACTER SORTING---");
-		Sorter<Character> characterBinarySorter = CHARACTER_SORTER_FACTORY.createSorter(SorterType.BINARY);
-		sortAndPrintRandomList(characterBinarySorter, true, Character.class);
-		sortAndPrintRandomList(characterBinarySorter, false, Character.class);
+		while (true)
+		{
+			Printer.printMessage("Input length of randomly generated array:");
+			if (SCANNER.hasNextInt())
+			{
+				length = SCANNER.nextInt();
+				break;
+			}
+			Printer.printMessage("Please make sure the input is a valid integer.");
+		}
 	}
 
 	/*
-	 * Generate a random list of the specified class and sort it using the specified sorter into the specified order.
+	 * The min value to include in the list.
 	 */
-	private static <T extends Comparable<T>> void sortAndPrintRandomList(Sorter<T> sorter, boolean asAscending, Class<T> clazz)
+	private static void minValueSelection()
 	{
-		List<T> listToSort;
-		String order;
-		if (clazz != Character.class)
+		while (true)
 		{
-			listToSort = ListUtil.createRandomList(-50, 50, 10, clazz);
-			order = asAscending ? "ascending" : "descending";
+			Printer.printMessage("Input the minimum value to be generated:");
+			if (SCANNER.hasNextLine())
+			{
+				String input = SCANNER.next();
+				if (input.length() == 1)
+				{
+					if (input.matches("\\d+"))
+					{
+						minValue = Integer.parseInt(input);
+						break;
+					}
+					else if (input.matches("\\w"))
+					{
+						minValue = input.charAt(0);
+						break;
+					}
+				}
+			}
+			Printer.printMessage("Please make sure the input is valid.");
 		}
-		else
+	}
+
+	/*
+	 * The max value to include in the list.
+	 */
+	private static void maxValueSelection()
+	{
+		while (true)
 		{
-			listToSort = ListUtil.createRandomList('a', 'z', 10, clazz);
-			order =  asAscending ? "alphabetical" : "reverse alphabetical";
+			Printer.printMessage("Input the maximum value to be generated:");
+			if (SCANNER.hasNextLine())
+			{
+				String input = SCANNER.next();
+				if (input.length() == 1)
+				{
+					if (input.matches("\\d+"))
+					{
+						maxValue = Integer.parseInt(input);
+						break;
+					}
+					else if (input.matches("\\w"))
+					{
+						maxValue = input.charAt(0);
+						break;
+					}
+				}
+			}
+			Printer.printMessage("Please make sure the input is valid.");
 		}
+	}
+
+	/*
+	 * Select the sorting order.
+	 */
+	private static void orderingSelection()
+	{
+		ordering: while (true)
+		{
+			Printer.printMessage("The sorted array should be:\n" +
+					"1 : Ascending\n" +
+					"2 : Descending");
+			if (SCANNER.hasNextInt())
+			{
+				switch (SCANNER.nextInt())
+				{
+					case 1:
+						asAscending = true;
+						break ordering;
+					case 2:
+						asAscending = false;
+						break ordering;
+					default:
+						Printer.printMessage("Please make sure the input is valid.");
+				}
+			}
+		}
+	}
+
+	/*
+	 * Generate array to sort.
+	 */
+	private static void generateArrayToSort()
+	{
+		listToSort = ListUtil.createRandomList(minValue, maxValue, length, typeClass);
+	}
+
+	/*
+	 * Prints the list and details about it.
+	 */
+	private static void printListAndSortDetails()
+	{
 		Printer.printFormattedMessage("Sorting the list %s into %s order using a %s...",
-				listToSort, order, sorter.getClass().getSimpleName());
+				listToSort, asAscending ? "ascending" : "descending", sorter.getClass().getSimpleName());
 		long start = System.nanoTime();
-		List<T> sortedList = sortList(listToSort, sorter, asAscending);
+		sortList();
 		long endTime = System.nanoTime();
 		long timeTaken = (endTime - start) / 1000;
 		Printer.printFormattedMessage("Operation took %d micro seconds.\nSorted List: %s\n", timeTaken, sortedList);
 	}
 
 	/*
-	 * Sorts the given list using the specified sorter in the specified order.
+	 * Sorts the current list using the current sorter.
 	 */
-	private static <T extends Comparable<T>> List<T> sortList(List<T> listToSort, Sorter<T> sorter, boolean asAscending)
+	private static <T extends Comparable<T>> void sortList()
 	{
-		List<T> sortedList;
 		try
 		{
 			if (asAscending)
@@ -238,6 +292,5 @@ public class Starter
 			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using " + sorter.getClass().getSimpleName() + " " + e.getMessage(), e);
 			Printer.printNewLine();
 		}
-		return sortedList;
 	}
 }
