@@ -1,13 +1,17 @@
 package com.sparta.dominic.main;
 
+import com.sparta.dominic.exception.ChildNotFoundException;
 import com.sparta.dominic.logger.SortManagerLogger;
 import com.sparta.dominic.sorter.Sorter;
 import com.sparta.dominic.sorter.SorterFactory;
 import com.sparta.dominic.sorter.SorterType;
+import com.sparta.dominic.tree.BinarySearchTree;
+import com.sparta.dominic.tree.BinaryTreePrinter;
 import com.sparta.dominic.util.ListUtil;
 import com.sparta.dominic.util.Printer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Starter
@@ -20,6 +24,7 @@ public class Starter
 	{
 		bubbleSortExamples();
 		mergeSortExamples();
+		binaryTreeExamples();
 		binarySortExamples();
 	}
 
@@ -69,7 +74,103 @@ public class Starter
 	}
 
 	/*
-	 * Binary tree sort for a random Integer, Double and Character list.
+	 * Binary tree examples.
+	 */
+	private static void binaryTreeExamples()
+	{
+		Printer.printMessage("-----BINARY TREES-----");
+		BinarySearchTree<Integer> integerBinarySearchTree = new BinarySearchTree<>();
+		List<Integer> listToAdd = new ArrayList<>(Arrays.asList(20, 15, 9, 18, 16, 35, 24, 60, 40));
+		Printer.printFormattedMessage("Adding the elements %s to the list...", listToAdd);
+		integerBinarySearchTree.addElements(listToAdd);
+		Printer.printMessage("Printing the Binary Search Tree...\n");
+		BinaryTreePrinter.print(integerBinarySearchTree);
+		Printer.printFormattedMessage("The Binary Search Tree contains %d elements.",
+				integerBinarySearchTree.getNumberOfElements());
+		Integer elementToLookFor = 24;
+		Printer.printFormattedMessage("The binary tree %s contain the element %d.",
+				integerBinarySearchTree.hasElement(elementToLookFor) ? "does" : "does not", elementToLookFor);
+		Integer elementToLookFor2 = 0;
+		Printer.printFormattedMessage("The binary tree %s contain the element %d.",
+				integerBinarySearchTree.hasElement(elementToLookFor2) ? "does" : "does not", elementToLookFor2);
+		Integer elementToLookFor3 = 18;
+		String result;
+		try
+		{
+			Integer leftOfElement = integerBinarySearchTree.getLeftChild(elementToLookFor3);
+			result = "is " + leftOfElement;
+		} catch (Exception e)
+		{
+			result = "does not exist";
+			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
+					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
+		}
+		Printer.printFormattedMessage("The left child of the element %d  %s.",
+				elementToLookFor3, result);
+
+		Integer elementToLookFor4 = 35;
+		try
+		{
+			Integer rightOfElement = integerBinarySearchTree.getRightChild(elementToLookFor4);
+			result = "is " + rightOfElement;
+		} catch (Exception e)
+		{
+			result = "does not exist";
+			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
+					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
+		}
+		Printer.printFormattedMessage("The right child of the element %d  %s.\n",
+				elementToLookFor4, result);
+
+		Integer elementToLookFor5 = 100;
+		try
+		{
+			Integer rightOfElement = integerBinarySearchTree.getRightChild(elementToLookFor5);
+			result = "is " + rightOfElement;
+		} catch (Exception e)
+		{
+			result = "does not exist";
+			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
+					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
+		}
+		Printer.printFormattedMessage("The right child of the element %d  %s.\n",
+				elementToLookFor5, result);
+
+		Integer elementToLookFor6 = 16;
+		try
+		{
+			Integer rightOfElement = integerBinarySearchTree.getRightChild(elementToLookFor6);
+			result = "is " + rightOfElement;
+		} catch (Exception e)
+		{
+			result = "does not exist";
+			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
+					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
+		}
+		Printer.printFormattedMessage("The right child of the element %d  %s.\n",
+				elementToLookFor6, result);
+
+		try
+		{
+			Integer leftOfElement = integerBinarySearchTree.getLeftChild(elementToLookFor6);
+			result = "is " + leftOfElement;
+		} catch (Exception e)
+		{
+			result = "does not exist";
+			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using "
+					+ integerBinarySearchTree.getClass().getSimpleName() + " " + e.getMessage(), e);
+		}
+		Printer.printFormattedMessage("The left child of the element %d  %s.\n",
+				elementToLookFor6, result);
+
+		Printer.printMessage("Clearing the Binary Search Tree...");
+		integerBinarySearchTree.clear();
+		Printer.printMessage("Printing the Binary Search Tree...");
+		BinaryTreePrinter.print(integerBinarySearchTree);
+	}
+
+	/*
+	 * Binary sort for a random Integer, Double and Character list.
 	 */
 	private static void binarySortExamples()
 	{
