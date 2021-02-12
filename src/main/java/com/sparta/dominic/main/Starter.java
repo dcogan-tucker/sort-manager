@@ -56,6 +56,10 @@ public class Starter
 							selectionSuccessful = false;
 					}
 				}
+				else
+				{
+					SCANNER.next();
+				}
 				if (selectionSuccessful)
 					break;
 			}
@@ -131,6 +135,10 @@ public class Starter
 				if (typeSelectionSuccessful)
 					break;
 			}
+			else
+			{
+				SCANNER.next();
+			}
 			Printer.printMessage("Please select one of the numbered options.");
 		}
 	}
@@ -169,6 +177,10 @@ public class Starter
 				if (sorterSelectionSuccessful)
 					break;
 			}
+			else
+			{
+				SCANNER.next();
+			}
 			Printer.printMessage("Please select one of the numbered options.");
 		}
 	}
@@ -196,6 +208,10 @@ public class Starter
 			{
 				length = SCANNER.nextInt();
 				break;
+			}
+			else
+			{
+				SCANNER.next();
 			}
 			Printer.printMessage("Please make sure the input is a valid integer.");
 		}
@@ -279,6 +295,11 @@ public class Starter
 					default:
 						Printer.printMessage("Please select one of the numbered options.");
 				}
+			}
+			else
+			{
+				Printer.printMessage("Please select one of the numbered options.");
+				SCANNER.next();
 			}
 		}
 	}
@@ -373,6 +394,10 @@ public class Starter
 				if (typeSelectionSuccessful)
 					break;
 			}
+			else
+			{
+				SCANNER.next();
+			}
 			Printer.printMessage("Please select one of the numbered options.");
 		}
 	}
@@ -396,11 +421,18 @@ public class Starter
 						addElement();
 						break;
 					case 2:
+						Printer.printMessage("Final Binary Search Tree!");
 						BinaryTreePrinter.print(binarySearchTree);
+						treeFunctionSelection();
 						break start;
 					default:
 						Printer.printMessage("Please select one of the numbered options.");
 				}
+			}
+			else
+			{
+				SCANNER.next();
+				Printer.printMessage("Please select one of the numbered options.");
 			}
 		}
 	}
@@ -450,6 +482,188 @@ public class Starter
 				BinaryTreePrinter.print(binarySearchTree);
 				break;
 			}
+			else
+			{
+				Printer.printMessage("Please ensure your input is a " + typeClass.getSimpleName());
+			}
+		}
+	}
+
+	/*
+	 * Select tree function.
+	 */
+	private static void treeFunctionSelection()
+	{
+		start: while (true)
+		{
+			Printer.printMessage("Select Function:\n" +
+								 "1 : Has Element.\n" +
+								 "2 : Get Left Child.\n" +
+			                     "3 : Get Right Child.\n" +
+								 "4 : Exit.");
+
+			if(SCANNER.hasNextInt())
+			{
+				int input = SCANNER.nextInt();
+				switch (input)
+				{
+					case 1:
+						treeHasElement();
+						break;
+					case 2:
+						treeGetLeftChild();
+						break;
+					case 3:
+						treeGetRightChild();
+						break;
+					case 4:
+						break start;
+					default:
+						Printer.printMessage("Please select one of the numbered options.");
+				}
+			}
+			else
+			{
+				Printer.printMessage("Please select one of the numbered options.");
+				SCANNER.next();
+			}
+		}
+	}
+
+	/*
+	 * Check for right child of element.
+	 */
+	private static void treeGetRightChild()
+	{
+		while (true)
+		{
+			Printer.printMessage("Input Element To Find Right Child Of:");
+			String input;
+			if (SCANNER.hasNext())
+			{
+				input = SCANNER.next();
+				try
+				{
+					Object right = null;
+					if (Integer.class.equals(typeClass))
+					{
+						if (input.matches("^-?[0-9]\\d*(\\.\\d+)?$"))
+						{
+							right = binarySearchTree.getRightChild(Integer.parseInt(input));
+						}
+					} else if (Double.class.equals(typeClass))
+					{
+						if (input.matches("(-?(\\\\d)+(\\\\.)?(\\\\d)*)\n"))
+						{
+							right = binarySearchTree.getRightChild(Double.parseDouble(input));
+						}
+					} else
+					{
+						if (input.length() == 1 && input.matches("[a-zA-Z]"))
+						{
+							right = binarySearchTree.getRightChild(input.toLowerCase().charAt(0));
+						}
+					}
+
+					if (right != null)
+					{
+						Printer.printMessage("The right child of " + input + " is " + right);
+						break;
+					}
+				}
+				catch (Exception e)
+				{
+					Printer.printMessage("Either " + input + " doesn't exist or doesn't have a right child.\n");
+					SortManagerLogger.getLogger().error(e.getMessage(), e);
+				}
+			}
+
+		}
+	}
+
+	/*
+	 * Check for left child of element.
+	 */
+	private static void treeGetLeftChild()
+	{
+		while (true)
+		{
+			Printer.printMessage("Input Element To Find Left Child Of:");
+			String input;
+			if (SCANNER.hasNext())
+			{
+				input = SCANNER.next();
+				try
+				{
+					Object left = null;
+					if (Integer.class.equals(typeClass))
+					{
+						if (input.matches("^-?[0-9]\\d*(\\.\\d+)?$"))
+						{
+							left = binarySearchTree.getLeftChild(Integer.parseInt(input));
+						}
+					} else if (Double.class.equals(typeClass))
+					{
+						if (input.matches("(-?(\\\\d)+(\\\\.)?(\\\\d)*)\n"))
+						{
+							left = binarySearchTree.getLeftChild(Double.parseDouble(input));
+						}
+					} else
+					{
+						if (input.length() == 1 && input.matches("[a-zA-Z]"))
+						{
+							left = binarySearchTree.getLeftChild(input.toLowerCase().charAt(0));
+						}
+					}
+
+					if (left != null)
+					{
+						Printer.printMessage("The left child of " + input + " is " + left);
+						break;
+					}
+				}
+				catch (Exception e)
+				{
+					Printer.printMessage("Either " + input + " doesn't exist or doesn't have a left child.\n");
+					SortManagerLogger.getLogger().error(e.getMessage(), e);
+				}
+			}
+		}
+	}
+
+	/*
+	 * Check if tree has element.
+	 */
+	private static void treeHasElement()
+	{
+		Printer.printMessage("Input Element To Find:");
+		String input;
+		if (SCANNER.hasNext())
+		{
+			input = SCANNER.next();
+			boolean hasElement = false;
+			if (Integer.class.equals(typeClass))
+			{
+				if (input.matches("^-?[0-9]\\d*(\\.\\d+)?$"))
+				{
+					hasElement = binarySearchTree.hasElement(Integer.parseInt(input));
+				}
+			} else if (Double.class.equals(typeClass))
+			{
+				if (input.matches("(-?(\\\\d)+(\\\\.)?(\\\\d)*)\n"))
+				{
+					hasElement = binarySearchTree.hasElement(Double.parseDouble(input));
+				}
+			} else
+			{
+				if (input.length() == 1 && input.matches("[a-zA-Z]"))
+				{
+					hasElement = binarySearchTree.hasElement(input.toLowerCase().charAt(0));
+				}
+			}
+
+			Printer.printMessage("The binary search tree " + (hasElement ? "does" : "does not")
+							+ " contain the element " + input + ".");
 		}
 	}
 }
