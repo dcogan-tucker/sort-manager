@@ -140,13 +140,13 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 	private T getLeftChildHelper(T element, Node<T> current) throws ChildNotFoundException
 	{
 		if (current == null)
-			throw new ChildNotFoundException("");
+			throw new ChildNotFoundException("The element " + element + " does not exist in the tree.");
 
 		int comparison = element.compareTo(current.value);
 		if (comparison == 0)
 		{
 			if (current.leftChild == null)
-				throw new ChildNotFoundException("");
+				throw new ChildNotFoundException("The element " + element + " does not have a left child.");
 			return current.leftChild.value;
 		}
 		else if (comparison > 0)
@@ -168,13 +168,13 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 	private T getRightChildHelper(T element, Node<T> current) throws ChildNotFoundException
 	{
 		if (current == null)
-			throw new ChildNotFoundException("");
+			throw new ChildNotFoundException("The element " + element + " does not exist in the tree.");
 
 		int comparison = element.compareTo(current.value);
 		if (comparison == 0)
 		{
 			if (current.rightChild == null)
-				throw new ChildNotFoundException("");
+				throw new ChildNotFoundException("The element " + element + " does not have a right child.");
 			return current.rightChild.value;
 		}
 		else if (comparison > 0)
