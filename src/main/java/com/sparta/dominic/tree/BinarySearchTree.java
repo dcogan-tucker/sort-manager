@@ -219,5 +219,6 @@ public class BinarySearchTree<T extends Comparable<T>> implements BinaryTree<T>
 	public void clear()
 	{
 		root = null;
+		size = 0;
 	}
 }
