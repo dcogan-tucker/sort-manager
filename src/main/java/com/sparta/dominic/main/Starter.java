@@ -1,7 +1,5 @@
 package com.sparta.dominic.main;
 
-import com.sparta.dominic.exception.EmptyListException;
-import com.sparta.dominic.exception.NullListException;
 import com.sparta.dominic.logger.SortManagerLogger;
 import com.sparta.dominic.sorter.Sorter;
 import com.sparta.dominic.sorter.SorterFactory;
@@ -133,7 +131,7 @@ public class Starter
 			{
 				sortedList = sorter.sortListDesc(listToSort);
 			}
-		} catch (EmptyListException | NullListException e)
+		} catch (Exception e)
 		{
 			sortedList = new ArrayList<>();
 			SortManagerLogger.getLogger().error(e.getClass().getSimpleName() + " raised when sorting using " + sorter.getClass().getSimpleName() + " " + e.getMessage(), e);
