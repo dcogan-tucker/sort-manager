@@ -19,6 +19,12 @@ public class SortManagerApp
 	private static final Scanner NUMBER_SCANNER = new Scanner(System.in);
 	private static final Scanner STRING_SCANNER = new Scanner(System.in);
 
+	private static ComparableType elementType;
+	private static SorterFactory<? extends Comparable<?>> sorterFactory;
+	private static SorterType sorterType;
+	private static Sorter<? extends Comparable<?>> sorter;
+	private static BinarySearchTree binarySearchTree;
+
 	public static void launch()
 	{
 		mainLoop();
@@ -53,16 +59,15 @@ public class SortManagerApp
 			boolean selectionSuccessful = true;
 			if (NUMBER_SCANNER.hasNextInt())
 			{
-				ComparableType type;
 				switch (NUMBER_SCANNER.nextInt())
 				{
 					case 1:
-						type = typeSelection();
-						sorterLoop(type);
+						typeSelection();
+						sorterLoop();
 						break;
 					case 2:
-						type = typeSelection();
-						treeLoop(type);
+						typeSelection();
+						treeLoop();
 						break;
 					case 3:
 						return false;
@@ -85,9 +90,9 @@ public class SortManagerApp
 	/*
 	 * Loop For Type Selection.
 	 */
-	private static ComparableType typeSelection()
+	private static void typeSelection()
 	{
-		while (true)
+		selection: while (true)
 		{
 			Printer.printMessage("Select Element Type:\n" +
 								 "1 : Integer\n" +
@@ -98,11 +103,14 @@ public class SortManagerApp
 				switch (NUMBER_SCANNER.nextInt())
 				{
 					case 1:
-						return ComparableType.INTEGER;
+						elementType = ComparableType.INTEGER;
+						break selection;
 					case 2:
-						return ComparableType.DOUBLE;
+						elementType = ComparableType.DOUBLE;
+						break selection;
 					case 3:
-						return ComparableType.CHARACTER;
+						elementType = ComparableType.CHARACTER;
+						break selection;
 				}
 			}
 			else
@@ -116,28 +124,28 @@ public class SortManagerApp
 	/*
 	 * Loop for sorters.
 	 */
-	private static void sorterLoop(ComparableType type)
+	private static void sorterLoop()
 	{
-		sortFactoryCreation:
+		sorterLoop:
 		while (true)
 		{
-			SorterFactory<? extends Comparable<?>> sorterFactory = createSortFactory(type);
-			sorterSelection:
+			createSortFactory();
+			selectSorter();
+			createSorter();
+
 			while (true)
 			{
-				Sorter sorter = createSorter(sorterFactory);
-
 				arrayGeneration:
 				while (true)
 				{
-					List listToSort = generateList(type);
+					List<? extends Comparable<?>> listToSort = generateList();
 					boolean asAscending = getListOrdering();
 
-					printListAndSortResults(listToSort, asAscending, sorter);
+					printListAndSortResults(listToSort, asAscending);
 					options: while (true)
 					{
-						Printer.printFormattedMessage("Perform Another Random List Sort Using the %s?",
-								sorter.getClass().getSimpleName());
+						Printer.printFormattedMessage("Perform Another Random List Sort Using the %s %s?",
+								elementType.name().toLowerCase(), sorter.getClass().getSimpleName());
 						if (STRING_SCANNER.hasNextLine())
 						{
 							switch (STRING_SCANNER.nextLine().toLowerCase())
@@ -154,6 +162,7 @@ public class SortManagerApp
 					}
 				}
 
+				newSorter:
 				while (true)
 				{
 					Printer.printMessage("Select Option:\n" +
@@ -165,13 +174,17 @@ public class SortManagerApp
 						switch (NUMBER_SCANNER.nextInt())
 						{
 							case 1:
-								type = typeSelection();
-								continue sortFactoryCreation;
+								typeSelection();
+								createSortFactory();
+								createSorter();
+								break newSorter;
 							case 2:
-								continue sorterSelection;
+								selectSorter();
+								createSorter();
+								break newSorter;
 							case 3:
 								Printer.printMessage("Exiting Sorters...");
-								break sortFactoryCreation;
+								break sorterLoop;
 						}
 					}
 				}
@@ -182,27 +195,28 @@ public class SortManagerApp
 	/*
 	 * Creates a sort factory of the given type.
 	 */
-	private static SorterFactory<? extends Comparable<?>> createSortFactory(ComparableType type)
+	private static void createSortFactory()
 	{
-		switch (type)
+		switch (elementType)
 		{
 			case INTEGER:
-				return new SorterFactory<Integer>();
+				sorterFactory = new SorterFactory<Integer>();
+				break;
 			case DOUBLE:
-				return new SorterFactory<Double>();
+				sorterFactory = new SorterFactory<Double>();
+				break;
 			case CHARACTER:
-				return new SorterFactory<Character>();
-			default:
-				return null;
+				sorterFactory = new SorterFactory<Character>();
+				break;
 		}
 	}
 
 	/*
 	 * Loop For Selecting Sorter Type.
 	 */
-	private static Sorter<? extends Comparable<?>> createSorter(SorterFactory<? extends Comparable<?>> sorterFactory)
+	private static void selectSorter()
 	{
-		while (true)
+		selection: while (true)
 		{
 			Printer.printMessage("Select Sort Method:\n" +
 						         "1 : Bubble Sort\n" +
@@ -213,11 +227,14 @@ public class SortManagerApp
 				switch (NUMBER_SCANNER.nextInt())
 				{
 					case 1:
-						return sorterFactory.createSorter(SorterType.BUBBLE);
+						sorterType = SorterType.BUBBLE;
+						break selection;
 					case 2:
-						return sorterFactory.createSorter(SorterType.MERGE);
+						sorterType = SorterType.MERGE;
+						break selection;
 					case 3:
-						return sorterFactory.createSorter(SorterType.BINARY);
+						sorterType = SorterType.BINARY;
+						break selection;
 				}
 			}
 			else
@@ -229,15 +246,23 @@ public class SortManagerApp
 	}
 
 	/*
+	 * Create sorter of the given type using the sort factory.
+	 */
+	private static void createSorter()
+	{
+		sorter = sorterFactory.createSorter(sorterType);
+	}
+
+	/*
 	 * Generate a random list of the given type.
 	 */
-	private static List<? extends Comparable<?>> generateList(ComparableType type)
+	private static List<? extends Comparable<?>> generateList()
 	{
 		Printer.printMessage("Input Parameters for List Generation:");
 		int size = sizeOfList();
-		int minValue = minValueInList(type);
-		int maxValue = maxValueInList(type);
-		return ListUtil.createRandomList(minValue, maxValue, size, type);
+		int minValue = minValueInList();
+		int maxValue = maxValueInList();
+		return ListUtil.createRandomList(minValue, maxValue, size, elementType);
 	}
 
 	/*
@@ -250,41 +275,45 @@ public class SortManagerApp
 			Printer.printMessage("Size of Array to Generate:");
 			if (NUMBER_SCANNER.hasNextInt())
 			{
-				return NUMBER_SCANNER.nextInt();
+				int input = NUMBER_SCANNER.nextInt();
+				if (input > 0)
+				{
+					return input;
+				}
 			}
 			else
 			{
-				Printer.printMessage("Invalid Input. Try Again.");
 				NUMBER_SCANNER.next();
 			}
+			Printer.printMessage("Invalid Input. Try Again.");
 		}
 	}
 
 	/*
 	 * Input min value.
 	 */
-	private static int minValueInList(ComparableType type)
+	private static int minValueInList()
 	{
-		return getBoundaryValue(type, true);
+		return getBoundaryValue(true);
 	}
 
 	/*
 	 * Input max value.
 	 */
-	private static int maxValueInList(ComparableType type)
+	private static int maxValueInList()
 	{
-		return getBoundaryValue(type, false);
+		return getBoundaryValue(false);
 	}
 
 	/*
 	 * Loop for inputting boundary values.
 	 */
-	private static int getBoundaryValue(ComparableType type, boolean minVal)
+	private static int getBoundaryValue(boolean minVal)
 	{
 		while (true)
 		{
 			Printer.printFormattedMessage("%s Value:", minVal ? "Minimum" : "Maximum");
-			switch (type)
+			switch (elementType)
 			{
 				case INTEGER:
 				case DOUBLE:
@@ -339,12 +368,12 @@ public class SortManagerApp
 	/*
 	 * Print original list, sorted list, method used and time taken.
 	 */
-	private static void printListAndSortResults(List<? extends Comparable<?>> listToSort, boolean asAscending, Sorter<? extends Comparable<?>> sorter)
+	private static void printListAndSortResults(List<? extends Comparable<?>> listToSort, boolean asAscending)
 	{
 		Printer.printFormattedMessage("Sorting the randomly generated list %s into %s order using the %s...",
 				listToSort, asAscending ? "ascending" : "descending", sorter.getClass().getSimpleName());
 		long startTime = System.nanoTime();
-		List sortedList = sortList(listToSort, asAscending, sorter);
+		List<? extends Comparable<?>> sortedList = sortList(listToSort, asAscending);
 		long endTime = System.nanoTime();
 		long timeTaken = (endTime - startTime) / 1000;
 		Printer.printFormattedMessage("Operation took %d micro seconds.\nSorted List %s\n",
@@ -354,7 +383,7 @@ public class SortManagerApp
 	/*
 	 * Sort the given list, in the given order using the given sorter.
 	 */
-	private static List<? extends Comparable<?>> sortList(List listToSort, boolean asAscending, Sorter<? extends Comparable<?>> sorter)
+	private static List<? extends Comparable<?>> sortList(List listToSort, boolean asAscending)
 	{
 		try
 		{
@@ -377,14 +406,14 @@ public class SortManagerApp
 	/*
 	 * Loop for the tree.
 	 */
-	private static void treeLoop(ComparableType type)
+	private static void treeLoop()
 	{
 		treeCreation:
 		while (true)
 		{
-			BinarySearchTree<? extends Comparable<?>> binarySearchTree = createBinarySearchTree(type);
-			buildTree(binarySearchTree, type);
-			performOperations(binarySearchTree, type);
+			createBinarySearchTree();
+			buildTree();
+			performOperations();
 
 			while (true)
 			{
@@ -397,9 +426,9 @@ public class SortManagerApp
 					switch (NUMBER_SCANNER.nextInt())
 					{
 						case 1:
-							type = typeSelection();
-							continue treeCreation;
+							typeSelection();
 						case 2:
+							continue treeCreation;
 						case 3:
 							Printer.printMessage("Exiting Trees...");
 							break treeCreation;
@@ -412,24 +441,23 @@ public class SortManagerApp
 	/*
 	 * Create a binary search tree of the given type.
 	 */
-	private static BinarySearchTree<? extends Comparable<?>> createBinarySearchTree(ComparableType type)
+	private static void createBinarySearchTree()
 	{
-		switch (type)
+		switch (elementType)
 		{
 			case INTEGER:
-				return new BinarySearchTree<Integer>();
+				binarySearchTree = new BinarySearchTree<Integer>();
 			case DOUBLE:
-				return new BinarySearchTree<Double>();
+				binarySearchTree = new BinarySearchTree<Double>();
 			case CHARACTER:
-				return new BinarySearchTree<Character>();
+				binarySearchTree = new BinarySearchTree<Character>();
 		}
-		return null;
 	}
 
 	/*
 	 * Loop for building the tree.
 	 */
-	private static void buildTree(BinarySearchTree<? extends Comparable<?>> binarySearchTree, ComparableType type)
+	private static void buildTree()
 	{
 		while (true)
 		{
@@ -442,13 +470,13 @@ public class SortManagerApp
 				switch (NUMBER_SCANNER.nextInt())
 				{
 					case 1:
-						addElementPrompt(binarySearchTree, type);
+						addElementPrompt();
 						break;
 					case 2:
-						addElementsPrompt(binarySearchTree, type);
+						addElementsPrompt();
 						break;
 					case 3:
-						printTree(binarySearchTree);
+						printTree();
 						return;
 					default:
 						Printer.printMessage("Invalid Input. Try Again.");
@@ -466,12 +494,12 @@ public class SortManagerApp
 	/*
 	 * Loop for adding an element.
 	 */
-	private static void addElementPrompt(BinarySearchTree binarySearchTree, ComparableType type)
+	private static void addElementPrompt()
 	{
 		addLoop: while (true)
 		{
-			Printer.printFormattedMessage("Input %s value:", type.name().toLowerCase());
-			switch (type)
+			Printer.printFormattedMessage("Input %s value:", elementType.name().toLowerCase());
+			switch (elementType)
 			{
 				case INTEGER:
 					if (NUMBER_SCANNER.hasNextInt())
@@ -512,11 +540,11 @@ public class SortManagerApp
 	/*
 	 * Loop for adding a list of elements.
 	 */
-	private static void addElementsPrompt(BinarySearchTree binarySearchTree, ComparableType type)
+	private static void addElementsPrompt()
 	{
 		while (true)
 		{
-			Printer.printFormattedMessage("Input %s values separated by spaces:", type.name().toLowerCase());
+			Printer.printFormattedMessage("Input %s values separated by spaces:", elementType.name().toLowerCase());
 			List elementsToAdd = new ArrayList();
 			List invalidElements = new ArrayList();
 			if (STRING_SCANNER.hasNextLine())
@@ -524,7 +552,7 @@ public class SortManagerApp
 				String input = STRING_SCANNER.nextLine();
 				String[] inputs = input.split(" ");
 
-				switch (type)
+				switch (elementType)
 				{
 					case INTEGER:
 						for (String element : inputs)
@@ -589,7 +617,7 @@ public class SortManagerApp
 	/*
 	 * Print the tree.
 	 */
-	private static void printTree(BinarySearchTree<? extends Comparable<?>> binarySearchTree)
+	private static void printTree()
 	{
 		Printer.printMessage("Printing Binary Search Tree...");
 		BinaryTreePrinter.print(binarySearchTree);
@@ -598,7 +626,7 @@ public class SortManagerApp
 	/*
 	 * Loop for selecting operation to perform.
 	 */
-	private static void performOperations(BinarySearchTree<? extends Comparable<?>> binarySearchTree, ComparableType type)
+	private static void performOperations()
 	{
 		while (true)
 		{
@@ -614,16 +642,16 @@ public class SortManagerApp
 				switch (NUMBER_SCANNER.nextInt())
 				{
 					case 1:
-						hasElementCheck(binarySearchTree, type);
+						hasElementCheck();
 						break;
 					case 2:
-						getLeftChild(binarySearchTree, type);
+						getLeftChild();
 						break;
 					case 3:
-						getRightChild(binarySearchTree, type);
+						getRightChild();
 						break;
 					case 4:
-						getSortedList(binarySearchTree, type);
+						getSortedList();
 						break;
 					case 5:
 						return;
@@ -642,18 +670,18 @@ public class SortManagerApp
 	/*
 	 * Check if the tree has the inputted element.
 	 */
-	private static void hasElementCheck(BinarySearchTree binarySearchTree, ComparableType type)
+	private static void hasElementCheck()
 	{
 		Printer.printFormattedMessage("Input a Value to Check if the Tree Contains it:");
-		Integer intVal = null;
-		Double doubleVal = null;
-		Character charVal = null;
+		Integer intVal;
+		Double doubleVal;
+		char charVal;
 
 		boolean containsValue = false;
 
 		String input = STRING_SCANNER.nextLine();
 
-		switch (type)
+		switch (elementType)
 		{
 			case INTEGER:
 				intVal = Ints.tryParse(input);
@@ -684,12 +712,12 @@ public class SortManagerApp
 	/*
 	 * Get the left child of the inputted element.
 	 */
-	private static void getLeftChild(BinarySearchTree binarySearchTree, ComparableType type)
+	private static void getLeftChild()
 	{
 		String input;
 		Integer intVal;
 		Double doubleVal;
-		Character charVal;
+		char charVal;
 
 		Integer intResult = null;
 		Double doubleResult = null;
@@ -702,7 +730,7 @@ public class SortManagerApp
 
 			try
 			{
-				switch (type)
+				switch (elementType)
 				{
 					case INTEGER:
 						intVal = Ints.tryParse(input);
@@ -738,19 +766,19 @@ public class SortManagerApp
 			}
 		}
 		Printer.printFormattedMessage("The left child of the %s value %s is %s.\n",
-				type.name(), input, ((type == ComparableType.INTEGER) ? intResult :
-						((type == ComparableType.DOUBLE) ? doubleResult : charResult)));
+				elementType.name().toLowerCase(), input, ((elementType == ComparableType.INTEGER) ? intResult :
+						((elementType == ComparableType.DOUBLE) ? doubleResult : charResult)));
 	}
 
 	/*
 	 * Get the right child of the inputted element.
 	 */
-	private static void getRightChild(BinarySearchTree binarySearchTree, ComparableType type)
+	private static void getRightChild()
 	{
 		String input;
 		Integer intVal;
 		Double doubleVal;
-		Character charVal;
+		char charVal;
 
 		Integer intResult = null;
 		Double doubleResult = null;
@@ -763,7 +791,7 @@ public class SortManagerApp
 
 			try
 			{
-				switch (type)
+				switch (elementType)
 				{
 					case INTEGER:
 						intVal = Ints.tryParse(input);
@@ -799,18 +827,18 @@ public class SortManagerApp
 			}
 		}
 		Printer.printFormattedMessage("The right child of the %s value %s is %s.\n",
-				type.name(), input, ((type == ComparableType.INTEGER) ? intResult :
-						((type == ComparableType.DOUBLE) ? doubleResult : charResult)));
+				elementType.name().toLowerCase(), input, ((elementType == ComparableType.INTEGER) ? intResult :
+						((elementType == ComparableType.DOUBLE) ? doubleResult : charResult)));
 	}
 
 	/*
 	 * Sort the tree into a list into the selected order.
 	 */
-	private static void getSortedList(BinarySearchTree binarySearchTree, ComparableType type)
+	private static void getSortedList()
 	{
-		SorterFactory sorterFactory = createSortFactory(type);
-		BinarySorter binarySorter = (BinarySorter) sorterFactory.createSorter(SorterType.BINARY);
-		List result;
+		createSortFactory();
+		BinarySorter<? extends Comparable<?>> binarySorter = (BinarySorter<? extends Comparable<?>>) sorterFactory.createSorter(SorterType.BINARY);
+		List<? extends Comparable<?>> result;
 		input: while (true)
 		{
 			Printer.printMessage("Select Sorting Order:\n" +
