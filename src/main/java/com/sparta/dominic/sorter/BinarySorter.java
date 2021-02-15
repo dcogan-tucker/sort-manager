@@ -16,6 +16,7 @@ import java.util.List;
 public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 {
 	private final BinarySearchTree<T> BST = new BinarySearchTree<>();
+	private int size;
 
 	/*
 	 * Protected as should only be called by the SorterFactory.
@@ -27,6 +28,7 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 	{
 		ListUtil.nullAndEmptyListChecker(listToSort);
 		BST.addElements(listToSort);
+		size = BST.getNumberOfElements();
 		List<T> sortedList = new ArrayList<>();
 		sortedListAscHelper(sortedList, BST.getRootNode());
 		BST.clear();
@@ -38,7 +40,7 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 	 */
 	private void sortedListAscHelper(List<T> sortedList, BinarySearchTree.Node<T> current)
 	{
-		if (sortedList.size() < BST.getNumberOfElements())
+		if (sortedList.size() < size)
 		{
 			if (current.getLeftChild() != null)
 			{
@@ -62,6 +64,7 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 	{
 		ListUtil.nullAndEmptyListChecker(listToSort);
 		BST.addElements(listToSort);
+		size = BST.getNumberOfElements();
 		List<T> sortedList = new ArrayList<>();
 		sortedListDescHelper(sortedList, BST.getRootNode());
 		BST.clear();
@@ -73,7 +76,7 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 	 */
 	private void sortedListDescHelper(List<T> sortedList, BinarySearchTree.Node<T> current)
 	{
-		if (sortedList.size() < BST.getNumberOfElements())
+		if (sortedList.size() < size)
 		{
 			if (current.getRightChild() != null)
 			{
@@ -90,5 +93,21 @@ public class BinarySorter<T extends Comparable<T>> implements Sorter<T>
 				sortedListDescHelper(sortedList, current.getLeftChild());
 			}
 		}
+	}
+
+	public List<T> sortedListAsc(BinarySearchTree<T> binarySearchTree)
+	{
+		List<T> sortedList = new ArrayList<>();
+		size = binarySearchTree.getNumberOfElements();
+		sortedListAscHelper(sortedList, binarySearchTree.getRootNode());
+		return sortedList;
+	}
+
+	public List<T> sortedListDesc(BinarySearchTree<T> binarySearchTree)
+	{
+		List<T> sortedList = new ArrayList<>();
+		size = binarySearchTree.getNumberOfElements();
+		sortedListDescHelper(sortedList, binarySearchTree.getRootNode());
+		return sortedList;
 	}
 }
