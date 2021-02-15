@@ -2,6 +2,7 @@ package com.sparta.dominic.util;
 
 import com.sparta.dominic.exception.EmptyListException;
 import com.sparta.dominic.exception.NullListException;
+import com.sparta.dominic.sorter.ComparableType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,28 +20,26 @@ public final class ListUtil
 	 * @param min The min value.
 	 * @param max The max value.
 	 * @param size The size of the output list.
-	 * @param clazz The class of the list values.
 	 * @param <T> The Object type, must be comparable.
 	 *
 	 * @return The randomly generated list.
 	 */
-	public static <T extends Comparable<T>> List<T> createRandomList(int min, int max, int size, Class<T> clazz)
+	public static <T extends Comparable<T>> List<T> createRandomList(int min, int max, int size, ComparableType type)
 	{
 		List<T> result = new ArrayList<>(size);
 		Random randomGen = new Random();
 		for (int i = 0; i < size; i++)
 		{
-			if (clazz == Integer.class)
+			switch (type)
 			{
-				result.add((T) Integer.valueOf(randomGen.nextInt(max - min + 1) + min));
-			}
-			else if (clazz == Double.class)
-			{
-				result.add((T) Double.valueOf(min + randomGen.nextDouble() * (max - min)));
-			}
-			else if (clazz == Character.class)
-			{
-				result.add((T) Character.valueOf((char) (randomGen.nextInt(max - min + 1) + min)));
+				case INTEGER:
+					result.add((T) Integer.valueOf(randomGen.nextInt(max - min + 1) + min));
+					break;
+				case DOUBLE:
+					result.add((T) Double.valueOf(min + randomGen.nextDouble() * (max - min)));
+					break;
+				case CHARACTER:
+					result.add((T) Character.valueOf((char) (randomGen.nextInt(max - min + 1) + min)));
 			}
 		}
 		return result;
